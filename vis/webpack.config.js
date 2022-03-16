@@ -1,36 +1,48 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const path = require("path");
-
-module.exports = {
-  entry: "./src/index.js",
+const config = {
+  entry: ['./src/index.js'],
   output: {
-    filename: "bundle.[hash].js",
-    path: path.resolve(__dirname, "dist"),
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "./src/index.html",
-    }),
-  ],
-  resolve: {
-    modules: [__dirname, "src", "node_modules"],
-    extensions: ["*", ".js", ".jsx", ".tsx", ".ts"],
+    path: __dirname + '/dist',
+    filename: 'calibration.js',
+    library: 'calibration'
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        exclude: /node_modules/,
-        loader: require.resolve("babel-loader"),
+        test: /\.js$/,
+        exclude:  /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env', '@babel/react']
+        }
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader"],
+        use: [
+          'style-loader',
+          'css-loader'
+        ]
       },
       {
-        test: /\.png|svg|jpg|gif$/,
-        use: ["file-loader"],
-      }, 
-    ],
+        test: /\.less$/,
+        use: ['style-loader', 'css-loader', 'less-loader'],
+      },
+      {
+        test: /\.(jpg|png|svg)$/,
+        loader: "url-loader",
+        options: {
+          limit: Infinity // everything
+        }
+      }
+    ]
   },
+  resolve: {
+    extensions: ['.js']
+  },
+  devServer:{
+    writeToDisk:true,
+    hot:false,
+    inline: false,
+  },
+  mode: 'development'
 };
+module.exports = config;

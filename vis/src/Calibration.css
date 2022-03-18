@@ -1,0 +1,31 @@
+.calibration-wrapper{
+
+    width: 700px;
+    height: 400px;
+    
+    display: flex;
+    flex-direction: column;
+
+
+}
+
+.header-container{
+
+    flex: 1;
+    background-color: blue;
+
+}
+
+.plot-container{
+
+    flex: 4;
+    background-color: red;
+
+}
+
+.footer-container{
+
+    flex: 1;
+    background-color: green;
+}
+

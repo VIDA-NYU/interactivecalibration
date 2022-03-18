@@ -12,6 +12,6 @@ import Calibration from './Calibration';
 ReactDOM.render(<Calibration/>, document.querySelector("#root") );
 
 // export function renderCalibration(divName, data){
-// 	ReactDOM.render( <div style={{width: 400, height: 600, backgroundColor:'red'}}><h1>Hello World 171</h1></div>, select(divName).node() );
+// 	ReactDOM.render( <Calibration/>, select(divName).node() );
 // }
 // renderCalibration();

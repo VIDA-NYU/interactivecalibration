@@ -1,14 +1,24 @@
 // react
 import React from 'react';
 
-// components
-import Classiccalibration from './components/Classiccalibration';
+// styles
+import './Calibration.css'
 
+// components
+import ClassicCalibrationPlot from './components/classiccalibration/Classiccalibration';
 
 const Calibration = () => {
-    return (<div style={{width: 400, height: 600, backgroundColor:'red'}}>
-                <Classiccalibration></Classiccalibration>
-            </div>);
+    return (
+        <div>
+            <div className='calibration-wrapper'>
+                <div className='header-container'></div>
+                <div className='plot-container'>
+                    <ClassicCalibrationPlot></ClassicCalibrationPlot>
+                </div>
+                <div className='footer-container'></div>
+            </div>
+        </div>
+    );
 }
 
 export default Calibration;

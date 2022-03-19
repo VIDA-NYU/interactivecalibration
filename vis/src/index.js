@@ -9,9 +9,9 @@ import { select } from 'd3-selection'
 import Calibration from './Calibration';
 
 // Testing in the browser
-ReactDOM.render(<Calibration/>, document.querySelector("#root") );
+// ReactDOM.render(<Calibration/>, document.querySelector("#root") );
 
-// export function renderCalibration(divName, data){
-// 	ReactDOM.render( <Calibration/>, select(divName).node() );
-// }
+export function renderCalibration(divName, data){
+	ReactDOM.render( <Calibration chartdata={data.points}/>, select(divName).node() );
+}
 // renderCalibration();

@@ -7,13 +7,14 @@ import './Calibration.css'
 // components
 import ClassicCalibrationPlot from './components/classiccalibration/Classiccalibration';
 
-const Calibration = () => {
+const Calibration = ( props ) => {
+
     return (
         <div>
             <div className='calibration-wrapper'>
                 <div className='header-container'></div>
                 <div className='plot-container'>
-                    <ClassicCalibrationPlot></ClassicCalibrationPlot>
+                    <ClassicCalibrationPlot chartdata={props.chartdata}></ClassicCalibrationPlot>
                 </div>
                 <div className='footer-container'></div>
             </div>

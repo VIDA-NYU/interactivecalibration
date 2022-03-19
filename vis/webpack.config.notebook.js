@@ -41,7 +41,7 @@ const config = {
   devServer:{
     hot:false,
   },
-  mode: 'development'
+  mode: 'production'
 };
 
 

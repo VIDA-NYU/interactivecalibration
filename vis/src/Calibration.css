@@ -18,8 +18,8 @@
 
 .plot-container{
 
+    display: flex;
     flex: 4;
-    background-color: red;
 
 }
 

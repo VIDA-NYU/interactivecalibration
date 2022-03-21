@@ -1,7 +1,7 @@
 .calibration-wrapper{
 
     width: 700px;
-    height: 400px;
+    height: 600px;
     
     display: flex;
     flex-direction: column;
@@ -11,8 +11,8 @@
 
 .header-container{
 
+    display: flex;
     flex: 1;
-    background-color: blue;
 
 }
 

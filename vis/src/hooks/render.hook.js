@@ -8,8 +8,7 @@ export const renderD3 = (renderchart) => {
     React.useEffect(() => {
         renderchart(d3.select(ref.current));
         return () => {};
-    })
-    console.log('REF: ', ref.current);
+    });
 
     return ref;
 }

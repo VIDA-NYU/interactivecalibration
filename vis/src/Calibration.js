@@ -6,13 +6,16 @@ import './Calibration.css'
 
 // components
 import ClassicCalibrationPlot from './components/classiccalibration/Classiccalibration';
+import Header from './components/header/Header';
 
 const Calibration = ( props ) => {
 
     return (
         <div>
             <div className='calibration-wrapper'>
-                <div className='header-container'></div>
+                <div className='header-container'>
+                    <Header/>
+                </div>
                 <div className='plot-container'>
                     <ClassicCalibrationPlot chartdata={props.chartdata}></ClassicCalibrationPlot>
                 </div>

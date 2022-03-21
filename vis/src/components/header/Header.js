@@ -1,41 +1,45 @@
 // react
-import React from 'react';
+import React, { useState } from 'react';
 
 // styles
 import './Header.css';
+import './Dropdown.css';
 
-// bootstrap
-// import { Button, Dropdown } from 'react-bootstrap';
+const Header = ( props ) => {
 
-function recomputechart(nbins){
-    
-    const incomingdata = (data) => { 
-        console.log('DATAAA', data);
+    // setting state
+    const [nbins, setNBins] = useState('10');
+    const [currentClass, setCurrentClass] = useState('0');
 
-    };
-    let comm = new CommAPI("submit_trajectory", incomingdata)
-  
-    // Send data
-    comm.call({'nbins': nbins})
-}
+    const nBinsChanged = (event) => {
+        const newNBins = event.target.value;
+        setNBins( newNBins );
+        props.onConfigurationChanged({'nbins': newNBins, 'currentClass': currentClass});
+    }
 
-const Header = () => {
+    const currentClassChanged = (event) => {
+        const newClass = event.target.value;
+        setCurrentClass( newClass );
+        props.onConfigurationChanged({'nbins': nbins, 'currentClass': newClass});
+    }
 
     return (
         <div className='header-wrapper'>
 
             <div className='button-container'>
-                <label for="bins">Bins:</label>
-                <select name="bins" id="nbins">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
+                <select name='bins' id='nbins' value={nbins} onChange={nBinsChanged}>
+                    <option value='10'>10</option>
+                    <option value='20'>20</option>
+                    <option value='30'>30</option>
+                    <option value='40'>40</option>
                 </select>
             </div>
 
             <div className='button-container'>
-                <button onClick={() => recomputechart(10)}>Bins</button>
+                <select name='classes' id='classname' value={currentClass} onChange={currentClassChanged}>
+                    <option value='0'>0</option>
+                    <option value='1'>1</option>
+                </select>
             </div>
             
         </div>)

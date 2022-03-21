@@ -16,16 +16,41 @@
 
 }
 
-.plot-container{
+.plot-wrapper{
 
     display: flex;
     flex: 4;
+}
+
+.calibration-container{
+
+    display: flex;
+    flex: 5;    
+    margin: 0px 10px 0 10px;
+
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #a2a3a2;
+    
+}
+
+.histograms-container{
+
+    display: flex;
+    flex: 2;
+    margin: 0px 10px 0 10px;
+
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #a2a3a2;
 
 }
 
 .footer-container{
 
     flex: 1;
-    background-color: green;
+
 }
 

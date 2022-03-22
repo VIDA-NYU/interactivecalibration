@@ -7,38 +7,28 @@ import './Calibration.css'
 // components
 import ClassicCalibrationPlot from './components/classiccalibration/Classiccalibration';
 import Header from './components/header/Header';
+import Featurehistogram from './components/histogram/Featureshistogram';
 
-const Calibration = () => {
 
+const Calibration = ( props ) => {
 
     const configurationChanged = (configuration) => {
 
-        console.log(configuration);
-        // setChartData(generate_data());
+        const reliability_diagram = ( data ) => {
+             setChartData( data.chartdata );
+        };
+        let comm = new CommAPI('get_reliability_diagram', reliability_diagram)
+
+        // Send data
+        comm.call({'params': { nbins: parseInt(configuration.nbins), currentclass: parseInt(configuration.currentClass) }  })
 
     }
 
-    const generate_data = () => {
-
-        const mockdata = [
-            {'x': 0.02049036, 'y': Math.random()},
-            {'x': 0.1447042,  'y': Math.random()},
-            {'x': 0.24656793, 'y': Math.random()},
-            {'x': 0.34570367, 'y': Math.random()},
-            {'x': 0.44950147, 'y': Math.random()},
-            {'x': 0.54758096, 'y': Math.random()},
-            {'x': 0.648824,   'y': Math.random()},
-            {'x': 0.74482655, 'y': Math.random()},
-            {'x': 0.83570598, 'y': Math.random()},
-            {'x': 0.99494154, 'y': Math.random()}];
-
-        return mockdata;
-
-    }
+    // getting histograms data
+    const histograms = props.histdata.map( element => element.values );
 
     // setting state
-    const [chartdata, setChartData] = useState( generate_data() );
-
+    const [chartdata, setChartData] = useState( [] );
 
     return (
         <div>
@@ -50,8 +40,14 @@ const Calibration = () => {
                     <div className='calibration-container'>
                         <ClassicCalibrationPlot chartdata={chartdata}></ClassicCalibrationPlot>
                     </div>
-                    <div className='histograms-container'>
-                        
+                    <div className='histograms-wrapper'>
+                        <div className='histograms-wrapper-scrollable'>
+                            {histograms.map( (histogram, index) => 
+                                <div key={index} className='histogram-container'>
+                                    <Featurehistogram histdata={histogram}/>
+                                </div>)
+                            }
+                        </div>
                     </div>
                 </div>
                 <div className='footer-container'></div>

@@ -11,8 +11,14 @@ const Header = ( props ) => {
     const [nbins, setNBins] = useState('10');
     const [currentClass, setCurrentClass] = useState('0');
 
-    const nBinsChanged = (event) => {
-        const newNBins = event.target.value;
+    const nBinsAdded = (event) => {
+        const newNBins = parseInt(nbins) + 1;
+        setNBins( newNBins );
+        props.onConfigurationChanged({'nbins': newNBins, 'currentClass': currentClass});
+    }
+
+    const nBinsSubtracted = (event) => {
+        const newNBins = parseInt(nbins) - 1;
         setNBins( newNBins );
         props.onConfigurationChanged({'nbins': newNBins, 'currentClass': currentClass});
     }
@@ -27,12 +33,9 @@ const Header = ( props ) => {
         <div className='header-wrapper'>
 
             <div className='button-container'>
-                <select name='bins' id='nbins' value={nbins} onChange={nBinsChanged}>
-                    <option value='10'>10</option>
-                    <option value='20'>20</option>
-                    <option value='30'>30</option>
-                    <option value='40'>40</option>
-                </select>
+                <button onClick={nBinsSubtracted}>-</button>
+                <p>{nbins}</p>
+                <button onClick={nBinsAdded}>+</button>
             </div>
 
             <div className='button-container'>

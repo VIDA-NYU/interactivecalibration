@@ -1,4 +1,5 @@
 from sklearn.calibration import calibration_curve
+from sklearn.metrics import confusion_matrix
 from interpret.glassbox import ExplainableBoostingClassifier
 import numpy as np
 
@@ -16,6 +17,12 @@ def calculate_histograms( data ):
         
     return histograms
 
+def confusion( preds, labels ):
+    
+    y_pred = np.argmax(preds, axis=1)
+    y_true = np.argmax(labels, axis=1)
+    
+    return confusion_matrix(y_true, y_pred)
 
 def reliability_diagram( preds, labels, class_index=1, bins=10 ):
     

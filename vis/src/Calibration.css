@@ -1,7 +1,7 @@
 .calibration-wrapper{
 
     width: 600px;
-    height: 500px;
+    height: 700px;
     
     display: flex;
     flex-direction: column;
@@ -61,7 +61,7 @@
 /* Hide scrollbar for Chrome, Safari and Opera */
 .histograms-wrapper-scrollable::-webkit-scrollbar {
     display: none;
-  }
+}
 
 .histogram-container{
 
@@ -73,7 +73,34 @@
 
 .footer-container{
 
+    display: flex;
     flex: 2;
+    margin: 10px 0px 10px 0px;
+
+}
+
+.instance-view-wrapper{
+
+    display: flex;
+    flex: 6;
+
+    margin: 0px 10px 0 10px;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #a2a3a2;
+
+}
+
+.confusion-matrix-wrapper{
+
+    display: flex;
+    flex: 2;
+
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    border-color: #a2a3a2;
 
 }
 

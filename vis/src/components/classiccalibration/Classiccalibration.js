@@ -10,7 +10,21 @@ import { renderD3 } from '../../hooks/render.hook';
 // third-party
 import * as d3 from 'd3';
 
-const ClassicCalibrationPlot = ( props ) => {    
+const ClassicCalibrationPlot = ( props ) => {   
+    
+    const create_brush = (chartGroup, svgref, margins, xScale) => {
+
+        // creating brush
+        const brush = d3.brushX()
+        .extent([ 
+            [0, 0], 
+            [svgref.node().getBoundingClientRect().width - margins.left - margins.right, svgref.node().getBoundingClientRect().height - margins.top - margins.bottom]
+        ])
+        .on("end", (event) => { props.onDiagramBrushed({'start': xScale.invert(event.selection[0]), 'end': xScale.invert(event.selection[1]) }) });
+
+        // appending brush
+        chartGroup.call(brush);
+    }
 
     const clear_plot = (svgref) => {
         svgref.selectAll('*').remove();
@@ -112,12 +126,14 @@ const ClassicCalibrationPlot = ( props ) => {
                 .style("color", "#a2a3a2")
                 .call(d3.axisLeft(yScale));
 
+            // appending brush
+            create_brush( chartGroup, svgref, margins, xScale );
+
             // rendering support line
-            render_support_line(chartGroup, xScale, yScale);
+            render_support_line( chartGroup, xScale, yScale );
 
             // mocking data
             render_calibration_line( chartGroup, xScale, yScale, props.chartdata );
-            
             
         });
 

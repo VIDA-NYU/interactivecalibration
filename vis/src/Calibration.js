@@ -8,11 +8,35 @@ import './Calibration.css'
 import ClassicCalibrationPlot from './components/classiccalibration/Classiccalibration';
 import Header from './components/header/Header';
 import Featurehistogram from './components/histogram/Featureshistogram';
+import Instanceview from './components/instanceview/Instanceview';
+
 
 
 const Calibration = ( props ) => {
 
-    const configurationChanged = (configuration) => {
+    const mockheader = ['Age', 'Education-Num', 'Sex', 'Capital Gain', 'Capital Loss','Hours per week'];
+    const mockbody = 
+    [[ 3.000,  1.130,  1.000,  2.174,  0.000, 4.000],
+    [ 8.400,  1.130,  1.000,  0.000,  0.000, 2.220],
+    [4.000, 4.200,  1.000,  0.000,  0.000, 4.000],
+    [1.060, 1.200,  1.000,  0.000,  0.000, 4.000],
+    [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
+    [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
+    [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
+    [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
+    [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
+    [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
+    [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
+    [1.200,  1.520,  0.000,  0.000,  0.000, 4.000]];
+
+    const reliability_diagram_brushed = (brushrange) => {
+
+        console.log('brushed');
+        console.log('brushrange: ', brushrange);
+
+    }
+ 
+    const configuration_changed = (configuration) => {
 
         const reliability_diagram = ( data ) => {
              setChartData( data.chartdata );
@@ -34,11 +58,11 @@ const Calibration = ( props ) => {
         <div>
             <div className='calibration-wrapper'>
                 <div className='header-container'>
-                    <Header  onConfigurationChanged={configurationChanged} />
+                    <Header  onConfigurationChanged={configuration_changed} />
                 </div>
                 <div className='plot-wrapper'>
                     <div className='calibration-container'>
-                        <ClassicCalibrationPlot chartdata={chartdata}></ClassicCalibrationPlot>
+                        <ClassicCalibrationPlot chartdata={chartdata} onDiagramBrushed={reliability_diagram_brushed}></ClassicCalibrationPlot>
                     </div>
                     <div className='histograms-wrapper'>
                         <div className='histograms-wrapper-scrollable'>
@@ -50,7 +74,14 @@ const Calibration = ( props ) => {
                         </div>
                     </div>
                 </div>
-                <div className='footer-container'></div>
+                <div className='footer-container'>
+                    <div className='instance-view-wrapper'>
+                        <Instanceview 
+                            tableheader={mockheader}
+                            tablebody={mockbody} />
+                    </div>
+                    <div className='confusion-matrix-wrapper'></div>
+                </div>
             </div>
         </div>
     );

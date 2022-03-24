@@ -12,6 +12,32 @@ import * as d3 from 'd3';
 
 const Featurehistogram = ( props ) => {
 
+
+    const add_brush = ( chartGroup, svgref, margins, xScale ) => {
+
+        // creating brush
+        const brush = d3.brushX()
+        .extent([ 
+            [0, 0], 
+            [svgref.node().getBoundingClientRect().width - margins.left - margins.right, svgref.node().getBoundingClientRect().height - margins.top - margins.bottom]
+        ])
+        .on("end", (event) => { 
+
+            const visualFloor = Math.ceil(xScale.invert( event.selection[0]));
+            const visualCeil = Math.floor(xScale.invert( event.selection[1]));
+
+            const startValue = props.histdata.bounds[visualFloor];
+            const endValue = props.histdata.bounds[visualCeil] + 1;
+
+            props.onFeatureBrushed( { 'name': props.histdata.name, 'start': startValue, 'end': endValue });
+
+        });
+
+        // appending brush
+        chartGroup.call(brush);
+
+    } 
+
     const add_header = ( headerGroup, name ) => {
         headerGroup
             .append('text')
@@ -33,7 +59,7 @@ const Featurehistogram = ( props ) => {
             .join(
                 enter => 
                     enter.append('rect')
-                        .attr('x', (d, index) => xScale(index) - 2)
+                        .attr('x', (d, index) => xScale(index))
                         .attr('y', (d, index) => yScale(d) )
                         .attr('width', bartWidth)
                         .attr('height', (d, index) => yScale.range()[0] - yScale(d)  )
@@ -67,7 +93,7 @@ const Featurehistogram = ( props ) => {
             const svgHeightRange = [0, svgref.node().getBoundingClientRect().height - margins.top - margins.bottom];
 
             // calculating data domain
-            const xDomain = [ 0, props.histdata.values.length - 1 ];
+            const xDomain = [ 0, props.histdata.values.length  ];
             const yDomain = [ d3.min(props.histdata.values) - 5, d3.max(props.histdata.values)] ;
 
             // creating scales
@@ -79,6 +105,9 @@ const Featurehistogram = ( props ) => {
 
             // rendering chart
             render_histogram( chartGroup, xScale, yScale, props.histdata.values);
+
+            // adding brush
+            add_brush( chartGroup, svgref, margins, xScale );
 
         });
 

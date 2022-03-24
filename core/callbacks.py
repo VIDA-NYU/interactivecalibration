@@ -2,6 +2,7 @@ from sklearn.calibration import calibration_curve
 from sklearn.metrics import confusion_matrix
 from interpret.glassbox import ExplainableBoostingClassifier
 import numpy as np
+import pandas as pd
 
 
 def calculate_histograms( data ):
@@ -24,13 +25,49 @@ def confusion( preds, labels ):
     
     return confusion_matrix(y_true, y_pred)
 
+
+def filter_by_feature_range(data, preds, labels, filters, classindex=0):
+    
+    filteredPreds = pd.DataFrame()
+    filteredLabels = pd.DataFrame()
+    filteredData = pd.DataFrame()
+
+    for key in filters:
+
+        if(filteredData.shape[0] == 0):
+            
+            currentconds = ((data[filters[key]['name']] >= filters[key]['start']) & (data[filters[key]['name']] <= filters[key]['end']))
+            
+            filteredData = data[ currentconds ]
+            filteredPreds = preds[:, classindex][ currentconds ] 
+            filteredLabels = labels[:, classindex][ currentconds ]
+            
+        else:
+            
+            currentconds = (filteredData[filters[key]['name']] >= filters[key]['start']) &  (filteredData[filters[key]['name']] <= filters[key]['end'])
+            
+            filteredData = filteredData[ currentconds ]
+            filteredPreds = filteredPreds[ currentconds ] 
+            filteredLabels = filteredLabels[ currentconds ]
+            
+            
+    return {
+        'tableheader': filteredData.columns.tolist(),
+        'tablebody': np.around(filteredData.values, decimals=2).tolist(),
+        'classifications': filteredLabels.tolist()
+    }
+
 ## filtering input data by prediction range
-def filter_by_range( preds, data, rangestart, rangeend, classindex=0 ):
+def filter_by_range( preds, data, labels, rangestart, rangeend, classindex=0 ):
     
     conds = ( (preds[:, classindex] >= rangestart) & (preds[:, classindex] <= rangeend) )
     filtereddataset = data[conds]
+    classifications = labels[:,classindex][conds]
     
-    return {'tableheader': filtereddataset.columns.tolist(), 'tablebody': np.around(filtereddataset.values, decimals=2).tolist()}
+    return {
+        'tableheader': filtereddataset.columns.tolist(), 
+        'tablebody': np.around(filtereddataset.values, decimals=2).tolist(),
+        'classifications':  classifications.tolist() }
 
 def reliability_diagram( preds, labels, class_index=1, bins=10 ):
     

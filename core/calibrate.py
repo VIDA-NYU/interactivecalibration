@@ -37,6 +37,6 @@ class Calibrate:
 
 
     def filter_input_data_by_pred_range(self, event):
-        return filter_by_range( self.predictions, self.data, event['params']['rangestart'], event['params']['rangeend'] )
+        return filter_by_range( self.predictions, self.data, self.labels, event['params']['rangestart'], event['params']['rangeend'] )
 
 

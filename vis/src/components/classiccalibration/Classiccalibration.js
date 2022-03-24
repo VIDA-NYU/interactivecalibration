@@ -126,14 +126,14 @@ const ClassicCalibrationPlot = ( props ) => {
                 .style("color", "#a2a3a2")
                 .call(d3.axisLeft(yScale));
 
-            // appending brush
-            create_brush( chartGroup, svgref, margins, xScale );
-
             // rendering support line
             render_support_line( chartGroup, xScale, yScale );
 
             // mocking data
             render_calibration_line( chartGroup, xScale, yScale, props.chartdata );
+
+            // appending brush
+            create_brush( chartGroup, svgref, margins, xScale );
             
         });
 

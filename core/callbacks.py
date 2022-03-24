@@ -24,6 +24,14 @@ def confusion( preds, labels ):
     
     return confusion_matrix(y_true, y_pred)
 
+## filtering input data by prediction range
+def filter_by_range( preds, data, rangestart, rangeend, classindex=0 ):
+    
+    conds = ( (preds[:, classindex] >= rangestart) & (preds[:, classindex] <= rangeend) )
+    filtereddataset = data[conds]
+    
+    return {'tableheader': filtereddataset.columns.tolist(), 'tablebody': np.around(filtereddataset.values, decimals=2).tolist()}
+
 def reliability_diagram( preds, labels, class_index=1, bins=10 ):
     
         '''

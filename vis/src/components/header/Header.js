@@ -33,16 +33,29 @@ const Header = ( props ) => {
         <div className='header-wrapper'>
 
             <div className='button-container'>
-                <button onClick={nBinsSubtracted}>-</button>
-                <p>{nbins}</p>
-                <button onClick={nBinsAdded}>+</button>
+
+                <div className='button-container-header'>
+                    <p>Bins</p>
+                </div>
+                <div className='button-container-body'>
+                    <button onClick={nBinsSubtracted}>-</button>
+                    <p>{nbins}</p>
+                    <button onClick={nBinsAdded}>+</button>
+                </div>
+
+                
             </div>
 
             <div className='button-container'>
-                <select name='classes' id='classname' value={currentClass} onChange={currentClassChanged}>
-                    <option value='0'>0</option>
-                    <option value='1'>1</option>
-                </select>
+                <div className='button-container-header'>
+                    <p>Class</p>
+                </div>
+                <div className='button-container-body'>
+                    <select name='classes' id='classname' value={currentClass} onChange={currentClassChanged}>
+                        <option value='0'>0</option>
+                        <option value='1'>1</option>
+                    </select>
+                </div>
             </div>
             
         </div>)

@@ -6,8 +6,6 @@ import './Instanceview.css'
 
 const Instanceview = (props) => {
 
-    console.log(props.tableheader);
-
     return (
         <div className='instance-view-table-wrapper'>
             

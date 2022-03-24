@@ -1,7 +1,7 @@
 .calibration-wrapper{
 
-    width: 600px;
-    height: 700px;
+    width: 800px;
+    height: 600px;
     
     display: flex;
     flex-direction: column;
@@ -17,7 +17,7 @@
 .plot-wrapper{
 
     display: flex;
-    flex: 4;
+    flex: 6;
 }
 
 .calibration-container{
@@ -74,7 +74,7 @@
 .footer-container{
 
     display: flex;
-    flex: 2;
+    flex: 3;
     margin: 10px 0px 10px 0px;
 
 }

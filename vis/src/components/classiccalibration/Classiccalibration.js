@@ -34,7 +34,7 @@ const ClassicCalibrationPlot = ( props ) => {
 
         // creating line function
         const line = d3.line()
-            .curve(d3.curveLinear)
+            .curve(d3.curveCatmullRom)
             .x(d => xScale(d.x))
             .y(d => yScale(d.y));
         

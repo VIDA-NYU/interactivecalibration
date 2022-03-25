@@ -18,9 +18,10 @@ const Instanceview = (props) => {
                             )}
                         </tr>
                     </thead>
+                    {/* className={ props.classifications[rowindex] === 1  ? 'positive-instance' : 'negative-instance' } */}
                     <tbody>
                         {props.tablebody.map( (row, rowindex) => 
-                            <tr key={rowindex} className={ props.classifications[rowindex] === 1  ? 'positive-instance' : 'negative-instance' }>
+                            <tr key={rowindex} >
                                 { row.map( (value, columnindex) => 
                                     <td key={columnindex} >{value}</td>    
                                 )}

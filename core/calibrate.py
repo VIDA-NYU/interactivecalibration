@@ -1,7 +1,7 @@
 from copyreg import constructor
 from gc import callbacks
 from notebookjs import execute_js
-from callbacks import reliability_diagram, learned_reliability_diagram, calculate_histograms, filter_by_range
+from callbacks import reliability_diagram, learned_reliability_diagram, calculate_histograms, filter_by_range, filter_by_feature_range
 
 
 class Calibrate:
@@ -25,7 +25,8 @@ class Calibrate:
 
         callbacks = {
             'get_reliability_diagram': self.get_reliability_diagram,
-            'filter_by_pred_range': self.filter_input_data_by_pred_range
+            'filter_by_pred_range': self.filter_input_data_by_pred_range,
+            'filter_by_feature_range': self.
         }
 
         # Plotting the Radial Bar Chart
@@ -39,4 +40,6 @@ class Calibrate:
     def filter_input_data_by_pred_range(self, event):
         return filter_by_range( self.predictions, self.data, self.labels, event['params']['rangestart'], event['params']['rangeend'] )
 
+    def filter_input_data_by_feature_range(self, event):
+        return filter_by_feature_range( self.data, self.predictions, self.labels, event['params']['filters'] )
 

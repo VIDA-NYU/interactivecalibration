@@ -36,7 +36,7 @@
     text-overflow: ellipsis;
     color: white;
     font-size: 8pt;
-    font-weight: 100;
+    font-weight: 500;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 
 }
@@ -75,6 +75,6 @@
 
 .instance-table th {
     cursor: pointer;
-    background: #525252;
+    background: #969696;
 }
 

@@ -63,8 +63,8 @@ const Featurehistogram = ( props ) => {
                         .attr('y', (d, index) => yScale(d) )
                         .attr('width', bartWidth)
                         .attr('height', (d, index) => yScale.range()[0] - yScale(d)  )
-                        .attr('fill', '#a6bddb')
-                        .attr('stroke', '#3690c0')
+                        .attr('fill', '#d9d9d9')
+                        .attr('stroke', '#737373')
                         .attr('stroke-width', '1')
         )            
     }

@@ -7,6 +7,9 @@ import './Classiccalibration.css';
 // hooks
 import { renderD3 } from '../../hooks/render.hook';
 
+// helpers
+import { nameTranslator } from '../../helpers/constants';
+
 // third-party
 import * as d3 from 'd3';
 
@@ -27,14 +30,16 @@ const ClassicCalibrationPlot = ( props ) => {
     }
 
     const clear_plot = (svgref) => {
+
         svgref.selectAll('*').remove();
+        
     }
 
-    const render_calibration_line = ( chartGroup, xScale, yScale, data, curveIndex  ) => {
+    const render_calibration_line = ( chartGroup, xScale, yScale, data, curveIndex, appliedfilters  ) => {
 
         // creating line function
         const line = d3.line()
-            .curve(d3.curveCatmullRom)
+            .curve(d3.curveLinear)
             .x(d => xScale(d.x))
             .y(d => yScale(d.y));
         
@@ -45,29 +50,52 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("class", "line") 
             .attr("d", line)
             .style("fill", "none")
-            .style("stroke", "#a2a3a2")
+            .style("stroke", () => { 
+                if(curveIndex === props.selectedCurve.curveIndex ){
+                    return "#9ecae1"
+                }
+                return "#a2a3a2";
+            })
             .style("stroke-width", "2")
             .style('cursor', 'pointer')
             .on('click', (event) => {
 
-                console.log('MOUSE CLICK');
-                d3.select(event.srcElement).style("stroke", "#9ecae1");
+                // fixing line selection
+                props.onCurveClick({curveIndex});
+
             })
             .on('mouseout', ( event ) => { 
 
-                console.log('MOUSE OUT INNER');
+                // clearing previous tooltip
+                d3.select('.tooltip-div').remove();
                 d3.select(event.srcElement).style("stroke-width", "2");
 
-                // firing up event
-                // props.onMouseOutCurve();
             })
             .on('mouseenter', ( event ) => { 
 
-                console.log('MOUSE ENTER');
-                d3.select(event.srcElement).style("stroke-width", "5");
+                // clearing previous tooltip
+                d3.select('.tooltip-div').remove();
 
-                // firing up event
-                props.onMouseEnterCurve();
+                // creating new tooltip
+                const tooltipdiv = d3.select("body")
+                        .append("div")	
+                        .attr("class", "tooltip-div")				
+                        .style("opacity", .9)
+                        .style("left", (event.pageX) + "px")		
+                        .style("top", (event.pageY - 50) + "px");
+
+                Object.entries(appliedfilters).forEach(entry => {
+                    const [key, value] = entry;
+
+                    if( key !== 'featurefilters' & key !== 'predrange' ){
+                        tooltipdiv
+                            .append('div')
+                            .attr("class", "tooltip-div-row")	
+                                .html(`<p><b>${nameTranslator[key]}</b>:</p> <p>${value}</p>`);
+                    }
+                });
+                    
+                d3.select(event.srcElement).style("stroke-width", "5");
             });
 
     }
@@ -151,9 +179,12 @@ const ClassicCalibrationPlot = ( props ) => {
             // rendering support line
             render_support_line( chartGroup, xScale, yScale );
 
+            
             for(let lineIndex = 0; lineIndex < props.chartdata.length; lineIndex++){
-                render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex], lineIndex );
+                render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex].curvepoints, lineIndex, props.chartdata[lineIndex].filters );
             }
+
+            
 
             // if( props.learnedCurve.active ){
             //     render_calibration_line( chartGroup, xScale, yScale, props.learnedCurve.curvedata );

@@ -23,12 +23,213 @@ const Calibration = ( props ) => {
     });
 
     const [ reliabilitycharts, setReliabilitycharts ] = useState( [] );
+    const [ selectedreliabilitychart, setSelectedreliabilitychart ] = useState( -1 );
+    
+    
     const [ curveInstances, setCurveInstances ] = useState( {
         'tableheader': [],
         'tablebody': []
     });
 
     const [matrixdata, setMatrixdata ] = useState([]);
+
+
+    //********** CALIBRATION PLOT EVENTS **********/
+    const on_curve_click = ( event ) => {
+
+        // callback
+        const curve_instance_data = ( data ) => {
+
+            // instance rows
+            setCurveInstances( {
+                'tableheader': data.tableheader,
+                'tablebody': data.tablebody.slice(0, 20)
+            });
+
+            // setting matrix data
+            setMatrixdata([['#f1eef6','#bdc9e1'],['#74a9cf','#0570b0']]);
+
+            // updating state 
+            setSelectedreliabilitychart( {'curveIndex': event.curveIndex} );
+
+        }
+
+
+        if( event.curveIndex !== selectedreliabilitychart.curveIndex ){
+
+            let comm_curve_instance_data_request = new CommAPI('get_curve_instance_data', curve_instance_data);
+            comm_curve_instance_data_request.call(event);
+
+        } else {
+
+            // instance rows
+            setCurveInstances( {
+                'tableheader': [],
+                'tablebody': []
+            });
+
+            // setting matrix data
+            setMatrixdata( [] );
+
+            // updating state
+            setSelectedreliabilitychart( {'curveIndex': -1 } );
+
+        }
+
+    };
+
+    //********** HEADER EVENTS **********/
+    const clear_all = () => {
+
+        // clearing curves
+        setReliabilitycharts( [] );
+
+        // clearing filters
+        setFilters({
+            'nbins': 10,
+            'selectedclass': 0,
+            'currentmodel': props.models[0],
+            'predrange': [],
+            'featurefilters': {}
+        });
+
+            // instance rows
+        setCurveInstances( {
+            'tableheader': [],
+            'tablebody': []
+        });
+
+        // setting matrix data
+        setMatrixdata( [] );
+
+        // updating state
+        setSelectedreliabilitychart( {'curveIndex': -1 } );
+        
+
+    };
+
+    const on_curve_requested = () => {
+
+        // callback
+        const reliability_diagram = ( data ) => {
+
+            const charts = [...reliabilitycharts];
+            charts.push( {'curvepoints': data.reliabilitychart, filters } )
+            setReliabilitycharts( charts );
+
+            // clearing filters
+            setFilters({
+                'nbins': 10,
+                'selectedclass': 0,
+                'currentmodel': props.models[0],
+                'predrange': [],
+                'featurefilters': {}
+            });
+
+        };
+
+        let comm_curve_request = new CommAPI('get_reliability_curve', reliability_diagram);
+        comm_curve_request.call(filters);
+
+    };
+
+
+    const header_changed = ( headerConf ) => {
+
+        const newFilters = {
+            ...filters,
+            ...headerConf
+        };
+
+        // setting new filters
+        setFilters(newFilters);
+    };
+
+
+    //********** HISTOGRAMS EVENTS **********/
+    const on_feature_brushed = ( histogramFilters ) => {
+
+        // adding histogram filters
+        const featurefilters = {
+            ...filters.featurefilters,
+        };
+        featurefilters[histogramFilters.name] = histogramFilters;
+
+        
+        // setting new filters
+        const newFilters = {
+            ...filters,
+            'featurefilters': featurefilters
+        }; 
+        
+        // updating state
+        setFilters(newFilters);
+    };
+
+    return (
+        <div>
+            <div className='calibration-wrapper'>
+
+                <div className='header-container'>
+                    <Header 
+                        models={props.models}
+                        nclasses={props.nclasses}
+                        headerChanged={header_changed}
+                        onCurveRequested={on_curve_requested}
+                        onClearCliked={clear_all}  
+                        // onClassChanged={on_class_changed} 
+                        // onLearnedCurveRequested={on_learned_curve_requested} 
+                        // onConfigurationChanged={configuration_changed} 
+                    />
+                </div>
+
+                <div className='plot-wrapper'>
+                    <div className='calibration-container'>
+                        <ClassicCalibrationPlot 
+                            chartdata={reliabilitycharts}
+                            selectedCurve={selectedreliabilitychart}
+                            onCurveClick={on_curve_click}
+                            // onMouseEnterCurve={on_mouse_enter_curve}
+                            // onMouseOutCurve={on_mouse_out_curve}
+                            // onMouseOutCurve={}
+                            // onDiagramBrushed={reliability_diagram_brushed} 
+                            // learnedCurve={learnedCurve} 
+                        />
+                    </div>
+                    <div className='histograms-wrapper'>
+                        <div className='histograms-wrapper-scrollable'>
+                            {props.histdata.map( (histogram, index) => 
+                                <div key={index} className='histogram-container'>
+                                    <Featurehistogram 
+                                        histdata={histogram} 
+                                        appliedFilters={filters.featurefilters}
+                                        onFeatureBrushed={on_feature_brushed}
+                                        // onFeatureBrushed={feature_brushed} 
+                                        // appliedFilters={featureFilters}
+                                    />
+                                </div>)
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div className='footer-container'>
+                    <div className='instance-view-wrapper'>
+                        <Instanceview 
+                            tableheader={curveInstances.tableheader}
+                            tablebody={curveInstances.tablebody}
+                            // classifications={classifications} 
+                        />
+                    </div>
+                    <div className='confusion-matrix-wrapper'>
+                        <ConfusionMatrix matrixdata={matrixdata}/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default Calibration;
 
     // setting state
     // const [chartdata, setChartData] = useState( [] );
@@ -149,177 +350,3 @@ const Calibration = ( props ) => {
     //     comm_configuration_changed.call({'params': { nbins: parseInt(configuration.nbins), currentclass: parseInt(configuration.currentClass) }  });
 
     // }
-
-    //********** CALIBRATION PLOT EVENTS **********/
-    const on_mouse_out_curve = () => {
-
-        console.log('MOUSE OUT');
-        setCurveInstances( {
-            'tableheader': [],
-            'tablebody': []
-        });
-
-        setMatrixdata([]);
-
-    };
-
-    const on_mouse_enter_curve = () => {
-        setMatrixdata([['#f1eef6','#bdc9e1'],['#74a9cf','#0570b0']]);
-    };
-
-    const on_curve_click = ( event ) => {
-
-        // callback
-        const curve_instance_data = ( data ) => {
-
-            setCurveInstances( {
-                'tableheader': data.tableheader,
-                'tablebody': data.tablebody
-            })
-
-        };
-
-        let comm_curve_instance_data_request = new CommAPI('get_curve_instance_data', curve_instance_data);
-        comm_curve_instance_data_request.call(event);
-
-    };
-
-    //********** HEADER EVENTS **********/
-    const clear_all = () => {
-
-        // clearing curves
-        setReliabilitycharts( [] );
-
-        // clearing filters
-        setFilters({
-            'nbins': 10,
-            'selectedclass': 0,
-            'currentmodel': props.models[0],
-            'predrange': [],
-            'featurefilters': {}
-        });
-        
-
-    };
-
-    const on_curve_requested = () => {
-
-        // callback
-        const reliability_diagram = ( data ) => {
-
-            const charts = [...reliabilitycharts];
-            charts.push( data.reliabilitychart )
-            setReliabilitycharts( charts );
-
-            // clearing filters
-            setFilters({
-                'nbins': 10,
-                'selectedclass': 0,
-                'currentmodel': props.models[0],
-                'predrange': [],
-                'featurefilters': {}
-            });
-
-        };
-
-        let comm_curve_request = new CommAPI('get_reliability_curve', reliability_diagram);
-        comm_curve_request.call(filters);
-
-    };
-
-
-    const header_changed = ( headerConf ) => {
-
-        const newFilters = {
-            ...filters,
-            ...headerConf
-        };
-
-        // setting new filters
-        setFilters(newFilters);
-    };
-
-
-    //********** HISTOGRAMS EVENTS **********/
-    const on_feature_brushed = ( histogramFilters ) => {
-
-        // adding histogram filters
-        const featurefilters = {
-            ...filters.featurefilters,
-        };
-        featurefilters[histogramFilters.name] = histogramFilters;
-
-        
-        // setting new filters
-        const newFilters = {
-            ...filters,
-            'featurefilters': featurefilters
-        }; 
-        
-        // updating state
-        setFilters(newFilters);
-    };
-
-    return (
-        <div>
-            <div className='calibration-wrapper'>
-
-                <div className='header-container'>
-                    <Header 
-                        models={props.models}
-                        nclasses={props.nclasses}
-                        headerChanged={header_changed}
-                        onCurveRequested={on_curve_requested}
-                        onClearCliked={clear_all}  
-                        // onClassChanged={on_class_changed} 
-                        // onLearnedCurveRequested={on_learned_curve_requested} 
-                        // onConfigurationChanged={configuration_changed} 
-                    />
-                </div>
-
-                <div className='plot-wrapper'>
-                    <div className='calibration-container'>
-                        <ClassicCalibrationPlot 
-                            chartdata={reliabilitycharts}
-                            onCurveClick={on_curve_click}
-                            onMouseEnterCurve={on_mouse_enter_curve}
-                            onMouseOutCurve={on_mouse_out_curve}
-                            // onMouseOutCurve={}
-                            // onDiagramBrushed={reliability_diagram_brushed} 
-                            // learnedCurve={learnedCurve} 
-                        />
-                    </div>
-                    <div className='histograms-wrapper'>
-                        <div className='histograms-wrapper-scrollable'>
-                            {props.histdata.map( (histogram, index) => 
-                                <div key={index} className='histogram-container'>
-                                    <Featurehistogram 
-                                        histdata={histogram} 
-                                        appliedFilters={filters.featurefilters}
-                                        onFeatureBrushed={on_feature_brushed}
-                                        // onFeatureBrushed={feature_brushed} 
-                                        // appliedFilters={featureFilters}
-                                    />
-                                </div>)
-                            }
-                        </div>
-                    </div>
-                </div>
-                <div className='footer-container'>
-                    <div className='instance-view-wrapper'>
-                        <Instanceview 
-                            tableheader={curveInstances.tableheader}
-                            tablebody={curveInstances.tablebody}
-                            // classifications={classifications} 
-                        />
-                    </div>
-                    <div className='confusion-matrix-wrapper'>
-                        <ConfusionMatrix matrixdata={matrixdata}/>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export default Calibration;

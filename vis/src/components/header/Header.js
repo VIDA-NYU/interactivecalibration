@@ -173,6 +173,10 @@ const Header = ( props ) => {
             <div className='single-button-container-header' onClick={on_curve_request}>
                 <p>Create Curve</p>
             </div>
+
+            <div className='single-button-container-header'>
+                <p>Learned Curve</p>
+            </div>
             
         </div>)
 

@@ -20,21 +20,24 @@ def get_reliability_curve(filters, data, preds, labels):
         filteredData = filteredData[ currentconds ]
         filteredPreds = filteredPreds[ currentconds ] 
         filteredLabels = filteredLabels[ currentconds ]
-            
 
-    
 
+    ## confusion matrix
+    confusionMatrix = confusion(filteredPreds, filteredLabels)
+
+    ## filtering to current class index
     filteredPreds = filteredPreds[:, filters['selectedclass']]
     filteredLabels = filteredLabels[:, filters['selectedclass']]
 
     # new reliability curve
     chartData = reliability_diagram( preds=filteredPreds, labels=filteredLabels, bins=filters['nbins'] )
+
             
     return {'reliabilitychart': chartData }, {
             'tableheader': filteredData.columns.tolist(),
             'tablebody': np.around(filteredData.values, decimals=2).tolist(),
             # 'classifications': filteredLabels.tolist()
-        }
+        }, confusionMatrix
 
 
 def reliability_diagram( preds, labels, bins ):
@@ -52,6 +55,35 @@ def reliability_diagram( preds, labels, bins ):
     acc, conf = calibration_curve(labels, preds, n_bins=bins, strategy="uniform")
     chartData = [ { 'x': conf[i], 'y': acc[i] }  for i in range(acc.shape[0]) ]
     return chartData
+
+def confusion( preds, labels ):
+    
+    y_pred = np.argmax(preds, axis=1)
+    y_true = np.argmax(labels, axis=1)
+    
+    return confusion_matrix(y_true, y_pred)
+
+# def learned_reliability_diagram(preds, labels, class_index=1, bins=10, random_state=0):
+
+#     '''
+#         n = number of samples
+#         k = number of classes
+
+#         preds - n x k numpy array of predicted probabilities
+#         labels - n x k numpy array of one-hot encoded labels
+#         class_index - integer of what class to consider
+#         bins - integer for number of bins in EBM model
+#         random_state - for reproducibility
+#     '''
+
+#     ebm = ExplainableBoostingClassifier(random_state=random_state, binning="uniform", max_bins=bins)
+#     ebm.fit(preds[:,class_index], labels[:,class_index])
+#     conf = np.linspace(0,1,num=100)
+#     acc = ebm.predict_proba(conf.reshape(-1,1))[:,1]
+
+#     chartData = [ { 'x': conf[i], 'y': acc[i] }  for i in range(acc.shape[0])]
+#     return {'learnedcurve': chartData }
+
 
 # def reliability_diagram( preds, labels, class_index=1, bins=10 ):
 

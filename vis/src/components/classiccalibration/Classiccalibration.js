@@ -8,7 +8,8 @@ import './Classiccalibration.css';
 import { renderD3 } from '../../hooks/render.hook';
 
 // helpers
-import { nameTranslator } from '../../helpers/constants';
+import { nameTranslator, divergingColorScale10 } from '../../helpers/constants';
+
 
 // third-party
 import * as d3 from 'd3';
@@ -51,6 +52,8 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
+                
+                // return divergingColorScale10(curveIndex);
                 if(curveIndex === props.selectedCurve.curveIndex ){
                     return "#9ecae1"
                 }
@@ -68,7 +71,8 @@ const ClassicCalibrationPlot = ( props ) => {
 
                 // clearing previous tooltip
                 d3.select('.tooltip-div').remove();
-                d3.select(event.srcElement).style("stroke-width", "2");
+                d3.select(event.srcElement)
+                    .style("stroke-width", "2");
 
             })
             .on('mouseenter', ( event ) => { 
@@ -95,7 +99,8 @@ const ClassicCalibrationPlot = ( props ) => {
                     }
                 });
                     
-                d3.select(event.srcElement).style("stroke-width", "5");
+                d3.select(event.srcElement)
+                    .style("stroke-width", "5");
             });
 
     }

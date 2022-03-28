@@ -51,17 +51,11 @@ class Calibrate:
         
     def calibrate(self):
 
-        # callbacks = {
-        #     'get_reliability_diagram': self.get_reliability_diagram,
-        #     'filter_by_pred_range': self.filter_input_data_by_pred_range,
-        #     'filter_by_feature_range': self.filter_input_data_by_feature_range,
-        #     'get_learned_curve': self.get_learned_curve
-        # }
-
         ## setting callbacks
         callbacks = {
             'get_reliability_curve': self.get_reliability_curve,
-            'get_curve_instance_data': self.get_curve_instance_data
+            'get_curve_instance_data': self.get_curve_instance_data,
+            'clear_curves': self.clear_curves
         }
 
         ## setting input data
@@ -86,10 +80,10 @@ class Calibrate:
         modelLabels = self.labels[event['currentmodel']]
         
         ## getting curve
-        currentcurvedata, instancedata = get_reliability_curve( event, data=self.data, preds=modelPredictions, labels=modelLabels )
+        currentcurvedata, instancedata, confusionmatrix = get_reliability_curve( event, data=self.data, preds=modelPredictions, labels=modelLabels )
         
         ## saving instance data
-        curve = ReliabilityCurve( tableheader=instancedata['tableheader'], tablebody=instancedata['tablebody'])
+        curve = ReliabilityCurve( tableheader=instancedata['tableheader'], tablebody=instancedata['tablebody'], confusionMatrix=confusionmatrix )
         self.createdCurves.append(curve)
 
         ## getting curve
@@ -99,11 +93,21 @@ class Calibrate:
     def get_curve_instance_data( self, event ):
 
         currentInstanceData = {
-            'tableheader':  self.createdCurves[0].tableheader,
-            'tablebody': self.createdCurves[0].tablebody
+            'tableheader':  self.createdCurves[event['curveIndex']].tableheader,
+            'tablebody': self.createdCurves[event['curveIndex']].tablebody,
+            'confusionmatrix': self.createdCurves[event['curveIndex']].confusionMatrix,
         }
 
         return currentInstanceData
+
+
+    def clear_curves(self, event):
+
+        nCurves = len(self.createdCurves)
+        self.createdCurves = []
+
+        return {'ncurves':  nCurves}
+
 
 
     # def get_reliability_diagram(self, event):

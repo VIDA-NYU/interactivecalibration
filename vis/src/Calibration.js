@@ -47,13 +47,13 @@ const Calibration = ( props ) => {
             });
 
             // setting matrix data
-            setMatrixdata([['#f1eef6','#bdc9e1'],['#74a9cf','#0570b0']]);
+            // setMatrixdata([['#f1eef6','#bdc9e1'],['#74a9cf','#0570b0']]);
+            setMatrixdata(data.confusionmatrix);
 
             // updating state 
             setSelectedreliabilitychart( {'curveIndex': event.curveIndex} );
 
         }
-
 
         if( event.curveIndex !== selectedreliabilitychart.curveIndex ){
 
@@ -81,30 +81,40 @@ const Calibration = ( props ) => {
     //********** HEADER EVENTS **********/
     const clear_all = () => {
 
-        // clearing curves
-        setReliabilitycharts( [] );
+        const clear_all_curves = ( event ) => {
 
-        // clearing filters
-        setFilters({
-            'nbins': 10,
-            'selectedclass': 0,
-            'currentmodel': props.models[0],
-            'predrange': [],
-            'featurefilters': {}
-        });
+            console.log('event: ', event);
 
-            // instance rows
-        setCurveInstances( {
-            'tableheader': [],
-            'tablebody': []
-        });
+            // clearing curves
+            setReliabilitycharts( [] );
 
-        // setting matrix data
-        setMatrixdata( [] );
+            // clearing filters
+            setFilters({
+                'nbins': 10,
+                'selectedclass': 0,
+                'currentmodel': props.models[0],
+                'predrange': [],
+                'featurefilters': {}
+            });
 
-        // updating state
-        setSelectedreliabilitychart( {'curveIndex': -1 } );
+                // instance rows
+            setCurveInstances( {
+                'tableheader': [],
+                'tablebody': []
+            });
+
+            // setting matrix data
+            setMatrixdata( [] );
+
+            // updating state
+            setSelectedreliabilitychart( {'curveIndex': -1 } );
+
+
+        }
         
+        let comm_clear_curves_request = new CommAPI('clear_curves', clear_all_curves);
+        comm_clear_curves_request.call({});
+
 
     };
 

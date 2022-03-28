@@ -12,7 +12,6 @@ import * as d3 from 'd3';
 
 const Featurehistogram = ( props ) => {
 
-
     const add_brush = ( chartGroup, svgref, margins, xScale ) => {
 
         // creating brush
@@ -29,7 +28,8 @@ const Featurehistogram = ( props ) => {
             const startValue = props.histdata.bounds[visualFloor];
             const endValue = props.histdata.bounds[visualCeil] + 1;
 
-            props.onFeatureBrushed( { 'name': props.histdata.name, 'start': startValue, 'end': endValue });
+            // propagating brush up
+            props.onFeatureBrushed( { 'name': props.histdata.name, 'start': startValue, 'end': endValue, 'visualFloor': event.selection[0], 'visualCeil': event.selection[1] });
 
         });
 
@@ -48,7 +48,24 @@ const Featurehistogram = ( props ) => {
             
     }
 
-    const render_histogram = ( chartGroup, xScale, yScale, data ) => {
+    const clear_plot = (svgref) => {
+        svgref.selectAll('*').remove();
+    }
+
+    const bar_color = (xScale, barIndex) => {
+
+        if(props.histdata.name in props.appliedFilters){
+
+            if( xScale(barIndex) >=  props.appliedFilters[props.histdata.name].visualFloor && xScale(barIndex) <=  props.appliedFilters[props.histdata.name ].visualCeil){
+                return '#9ecae1';
+            } else {
+                return '#d9d9d9';
+            }
+        }
+        return '#d9d9d9';
+    }
+
+    const render_histogram = ( chartGroup, xScale, yScale, data, filter={} ) => {
 
         // calculating width of the bar
         const bartWidth = (xScale.range()[1] / data.length) - 2;
@@ -61,9 +78,9 @@ const Featurehistogram = ( props ) => {
                     enter.append('rect')
                         .attr('x', (d, index) => xScale(index))
                         .attr('y', (d, index) => yScale(d) )
-                        .attr('width', bartWidth)
+                        .attr('width', bartWidth )
                         .attr('height', (d, index) => yScale.range()[0] - yScale(d)  )
-                        .attr('fill', '#d9d9d9')
+                        .attr('fill', (d, index) => bar_color(xScale, index) )
                         .attr('stroke', '#737373')
                         .attr('stroke-width', '1')
         )            
@@ -71,6 +88,9 @@ const Featurehistogram = ( props ) => {
 
     const ref = renderD3( 
         (svgref) => {
+
+            // clearing
+            clear_plot(svgref);
 
             // constants
             const margins = {

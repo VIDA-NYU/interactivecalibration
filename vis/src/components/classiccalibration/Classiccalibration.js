@@ -30,7 +30,7 @@ const ClassicCalibrationPlot = ( props ) => {
         svgref.selectAll('*').remove();
     }
 
-    const render_calibration_line = ( chartGroup, xScale, yScale, data  ) => {
+    const render_calibration_line = ( chartGroup, xScale, yScale, data, curveIndex  ) => {
 
         // creating line function
         const line = d3.line()
@@ -46,7 +46,29 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", "#a2a3a2")
-            .style("stroke-width", "1");
+            .style("stroke-width", "2")
+            .style('cursor', 'pointer')
+            .on('click', (event) => {
+
+                console.log('MOUSE CLICK');
+                d3.select(event.srcElement).style("stroke", "#9ecae1");
+            })
+            .on('mouseout', ( event ) => { 
+
+                console.log('MOUSE OUT INNER');
+                d3.select(event.srcElement).style("stroke-width", "2");
+
+                // firing up event
+                // props.onMouseOutCurve();
+            })
+            .on('mouseenter', ( event ) => { 
+
+                console.log('MOUSE ENTER');
+                d3.select(event.srcElement).style("stroke-width", "5");
+
+                // firing up event
+                props.onMouseEnterCurve();
+            });
 
     }
 
@@ -129,11 +151,16 @@ const ClassicCalibrationPlot = ( props ) => {
             // rendering support line
             render_support_line( chartGroup, xScale, yScale );
 
-            // mocking data
-            render_calibration_line( chartGroup, xScale, yScale, props.chartdata );
+            for(let lineIndex = 0; lineIndex < props.chartdata.length; lineIndex++){
+                render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex], lineIndex );
+            }
+
+            // if( props.learnedCurve.active ){
+            //     render_calibration_line( chartGroup, xScale, yScale, props.learnedCurve.curvedata );
+            // }
 
             // appending brush
-            create_brush( chartGroup, svgref, margins, xScale );
+            // create_brush( chartGroup, svgref, margins, xScale );
             
         });
 

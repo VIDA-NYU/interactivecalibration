@@ -31,6 +31,12 @@ import Calibration from './Calibration';
 
 export function renderCalibration(divName, data){
 
-	ReactDOM.render( <Calibration histdata={data.histograms}/>, select(divName).node() );
+	ReactDOM.render( 
+		<Calibration 
+			histdata={data.histograms}
+			models={data.models}
+			nclasses={data.nclasses}
+			/>, 
+		select(divName).node() );
 
 }

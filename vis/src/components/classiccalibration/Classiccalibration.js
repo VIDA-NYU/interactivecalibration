@@ -57,8 +57,6 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
-
-                // console.log(props.selectedCurve.curveIndex);
                 return divergingColorScale10(curveIndex);
                 // if(curveIndex === props.selectedCurve.curveIndex ){
                 //     return "#9ecae1"
@@ -160,7 +158,6 @@ const ClassicCalibrationPlot = ( props ) => {
 
     }
 
-
     const render_legends = ( xLegendGroup, yLegendGroup ) => {
 
         xLegendGroup
@@ -187,6 +184,29 @@ const ClassicCalibrationPlot = ( props ) => {
             .style("font-size", "8pt")
             .style("font-weight", "500")
             .style('font-family',"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif'");  
+
+    }
+
+    const render_preds_histogram = ( histogramGroup, data, xScale, yScale ) => {
+
+        // calculating width of the bar
+        const bartWidth = (xScale.range()[1] / data.length) - 2;
+
+        histogramGroup
+            .selectAll('.bar')
+            .data( data )
+            .join(
+                enter => 
+                    enter.append('rect')
+                        .attr('x', (d, index) => xScale(index) )
+                        .attr('y',  (d, index) => yScale(d)  )
+                        .attr('width', bartWidth)
+                        .attr('height', (d, index) => yScale.range()[0] - yScale(d) )
+                        .attr('fill', '#d9d9d9')
+                        .attr('stroke', '#969696')
+                        .attr('stroke-width', '1')
+                        .style('opacity', 0.5)
+        )            
 
     }
 
@@ -221,9 +241,13 @@ const ClassicCalibrationPlot = ( props ) => {
                 .append("g")
                 .attr("transform", `translate(${svgref.node().getBoundingClientRect().width -  margins.right},${svgref.node().getBoundingClientRect().height - 10 })`);
 
-            const yAxisLegend = svgref
+            const yLegendGroup = svgref
                 .append("g")
                 .attr("transform", `translate(${ margins.left/2 - 5 },${margins.top})`);
+
+            const predsHistogramGroup = svgref
+                .append("g")
+                .attr("transform", `translate(${margins.left},${svgref.node().getBoundingClientRect().height -  margins.bottom - 80 })`);
             
             // svg size
             const svgWidthRange = [0, svgref.node().getBoundingClientRect().width - margins.left - margins.right];
@@ -247,7 +271,19 @@ const ClassicCalibrationPlot = ( props ) => {
                 .call(d3.axisLeft(yScale));
 
             // render legends
-            render_legends( xLegendGroup, yAxisLegend );
+            render_legends( xLegendGroup, yLegendGroup );
+
+            if( props.selectedCurve.curveIndex !== -1 && props.predsHistrogram.values.length > 0 ){
+
+                // calculating max histogram value
+                const maxHistValue = d3.max(props.predsHistrogram.values);
+
+                const predsHistogramXscale = d3.scaleLinear().domain([0, props.predsHistrogram.values.length]).range(svgWidthRange);
+                const predsHistogramYscale = d3.scaleLinear().domain([0, maxHistValue]).range([80, 0]);
+
+                
+                render_preds_histogram( predsHistogramGroup, props.predsHistrogram.values, predsHistogramXscale, predsHistogramYscale );
+            }
 
             if( props.selectedCurve.curveIndex !== -1 ){
                 // appending brush
@@ -265,8 +301,8 @@ const ClassicCalibrationPlot = ( props ) => {
             if( props.learnedCurve && props.learnedCurve.length > 0 ){
                 render_learned_line( chartGroup, xScale, yScale, props.learnedCurve );
             }
-            
-        });
+
+    });
 
     return (
         <div className='plot-container'>

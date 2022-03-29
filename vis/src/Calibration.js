@@ -25,6 +25,7 @@ const Calibration = ( props ) => {
     const [ reliabilitycharts, setReliabilitycharts ] = useState( [] );
     const [ selectedreliabilitychart, setSelectedreliabilitychart ] = useState( {'curveIndex': -1} );
     const [ currentLearnedCurve, setCurrentLearnedCurve ] = useState( [] );
+    const [ currentPredsHistogram, setCurrentPredsHistogram] = useState( {'values': [] } );
     
     
     const [ curveInstances, setCurveInstances ] = useState( {
@@ -74,6 +75,10 @@ const Calibration = ( props ) => {
             // updating state 
             setSelectedreliabilitychart( {'curveIndex': event.curveIndex} );
 
+            // updating preds histogram
+            setCurrentPredsHistogram( 
+                {'values':  Array.from({length: 20}, () => Math.floor(Math.random() * 40)) } );
+
             // clearing learned curve
             setCurrentLearnedCurve( [] );
 
@@ -97,6 +102,9 @@ const Calibration = ( props ) => {
 
             // setting matrix data
             setMatrixdata( [] );
+
+            // clearing preds histogram
+            setCurrentPredsHistogram( {'values': [] } );
 
             // updating state
             setSelectedreliabilitychart( {'curveIndex': -1 } );
@@ -232,9 +240,6 @@ const Calibration = ( props ) => {
                         onCurveRequested={on_curve_requested}
                         onLearnedCurveRequested={on_learned_curve_requested}
                         onClearCliked={clear_all}  
-                        // onClassChanged={on_class_changed} 
-                        // onLearnedCurveRequested={on_learned_curve_requested} 
-                        // onConfigurationChanged={configuration_changed} 
                     />
                 </div>
 
@@ -244,13 +249,9 @@ const Calibration = ( props ) => {
                             chartdata={reliabilitycharts}
                             selectedCurve={selectedreliabilitychart}
                             learnedCurve={currentLearnedCurve}
+                            predsHistrogram={currentPredsHistogram}
                             onCurveClick={on_curve_click}
                             onDiagramBrushed={on_pred_range_brushed}
-                            // onMouseEnterCurve={on_mouse_enter_curve}
-                            // onMouseOutCurve={on_mouse_out_curve}
-                            // onMouseOutCurve={}
-                            // onDiagramBrushed={reliability_diagram_brushed} 
-                            // learnedCurve={learnedCurve} 
                         />
                     </div>
                     <div className='histograms-wrapper'>

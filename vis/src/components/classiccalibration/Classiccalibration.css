@@ -2,6 +2,7 @@ svg {
 
     height: 100%;
     width: 100%;
+    
     margin-right: "0px";
     margin-left: "0px";
 
@@ -10,8 +11,11 @@ svg {
 
 .plot-container{
 
+    width: 330px;
+    height: 330px;
+
     display: flex;
-    flex: 1;
+    /* flex: 1; */
 
 }
 

@@ -36,6 +36,27 @@ const Calibration = ( props ) => {
 
 
     //********** CALIBRATION PLOT EVENTS **********/
+    const on_pred_range_brushed = ( event ) => {
+
+        // console.log('on pred range: ', event);
+
+        const filtered_table_data = ( data ) => {
+
+            console.log('inside: ',data);
+
+             // instance rows
+             setCurveInstances( {
+                'tableheader': data.tableheader,
+                'tablebody': data.tablebody.slice(0, 200)
+            });
+
+        }
+
+        let comm_filter_by_pred_range_request = new CommAPI('filter_by_pred_range', filtered_table_data);
+        comm_filter_by_pred_range_request.call(event);
+
+    }
+
     const on_curve_click = ( event ) => {
 
         // callback
@@ -44,11 +65,10 @@ const Calibration = ( props ) => {
             // instance rows
             setCurveInstances( {
                 'tableheader': data.tableheader,
-                'tablebody': data.tablebody.slice(0, 20)
+                'tablebody': data.tablebody.slice(0, 200)
             });
 
             // setting matrix data
-            // setMatrixdata([['#f1eef6','#bdc9e1'],['#74a9cf','#0570b0']]);
             setMatrixdata(data.confusionmatrix);
 
             // updating state 
@@ -154,10 +174,6 @@ const Calibration = ( props ) => {
 
     const on_learned_curve_requested = () => {
 
-
-        console.log('Learned request...');
-        console.log( selectedreliabilitychart );
-
         // callback
         const learned_curve_data = ( data ) => {
 
@@ -229,7 +245,7 @@ const Calibration = ( props ) => {
                             selectedCurve={selectedreliabilitychart}
                             learnedCurve={currentLearnedCurve}
                             onCurveClick={on_curve_click}
-                            
+                            onDiagramBrushed={on_pred_range_brushed}
                             // onMouseEnterCurve={on_mouse_enter_curve}
                             // onMouseOutCurve={on_mouse_out_curve}
                             // onMouseOutCurve={}

@@ -178,9 +178,9 @@ const Header = ( props ) => {
                 <p>Create Curve</p>
             </div>  
 
-            {/* className='single-button-container-header'  */}
-
-            <div className='single-button-container-header' style={ (props.selectedCurve.curveIndex === -1) ? { display: 'none' } : {display: 'flex'} } onClick={on_learned_curve_request}>
+            <div className='single-button-container-header' 
+                style={ (props.selectedCurve.curveIndex === -1) ? { display: 'none' } : {display: 'flex'} } 
+                onClick={on_learned_curve_request}>
                 <p>Learned Curve</p>
             </div>
             

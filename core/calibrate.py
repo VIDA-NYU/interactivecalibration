@@ -3,6 +3,7 @@ from gc import callbacks
 from notebookjs import execute_js
 from helpers import calculate_histograms
 from reliabilitycurve import ReliabilityCurve
+import numpy as np
 # from callbacks import reliability_diagram, learned_reliability_diagram, filter_by_range, filter_by_feature_range
 from callbacks import get_reliability_curve, learned_reliability_diagram
 
@@ -56,7 +57,8 @@ class Calibrate:
             'get_reliability_curve': self.get_reliability_curve,
             'get_learned_curve': self.get_learned_curve,
             'get_curve_instance_data': self.get_curve_instance_data,
-            'clear_curves': self.clear_curves
+            'clear_curves': self.clear_curves,
+            'filter_by_pred_range': self.filter_by_pred_range
         }
 
         ## setting input data
@@ -106,6 +108,20 @@ class Calibrate:
         }
 
         return currentInstanceData
+
+    def filter_by_pred_range( self, event ):
+
+        ## getting current curve
+        currentCurve = self.createdCurves[0]
+
+        ## setting conds
+        conds = ( (currentCurve.preds >= event['start']) & (currentCurve.preds <= event['end']) )
+        tablebody = np.array(currentCurve.tablebody)[conds]
+
+        return {
+            'tablebody': tablebody.tolist(),
+            'tableheader': currentCurve.tableheader
+        }
 
 
     def clear_curves(self, event):

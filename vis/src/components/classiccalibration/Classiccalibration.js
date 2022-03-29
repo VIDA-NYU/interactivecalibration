@@ -24,7 +24,12 @@ const ClassicCalibrationPlot = ( props ) => {
             [0, 0], 
             [svgref.node().getBoundingClientRect().width - margins.left - margins.right, svgref.node().getBoundingClientRect().height - margins.top - margins.bottom]
         ])
-        .on("end", (event) => { props.onDiagramBrushed({'start': xScale.invert(event.selection[0]), 'end': xScale.invert(event.selection[1]) }) });
+        .on("end", (event) => { 
+
+            props.onDiagramBrushed(
+                {'start': xScale.invert(event.selection[0]), 
+                'end': xScale.invert(event.selection[1]) }) 
+        });
 
         // appending brush
         chartGroup.call(brush);
@@ -52,10 +57,13 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
-                if(curveIndex === props.selectedCurve.curveIndex ){
-                    return "#9ecae1"
-                }
-                return "#a2a3a2";
+
+                // console.log(props.selectedCurve.curveIndex);
+                return divergingColorScale10(curveIndex);
+                // if(curveIndex === props.selectedCurve.curveIndex ){
+                //     return "#9ecae1"
+                // }
+                // return "#a2a3a2";
             })
             .style("stroke-width", "2")
             .style('cursor', 'pointer')
@@ -152,13 +160,43 @@ const ClassicCalibrationPlot = ( props ) => {
 
     }
 
+
+    const render_legends = ( xLegendGroup, yLegendGroup ) => {
+
+        xLegendGroup
+            .append("text")
+            .attr("x", 0)
+            .attr("y", 0)
+            .text("Confidence")
+            .attr('fill', '#969696')
+            .attr('text-anchor', 'end')
+            .attr('alignment-baseline', 'baseline')
+            .style("font-size", "8pt")
+            .style("font-weight", "500")
+            .style('font-family',"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif'");  
+
+        yLegendGroup
+            .append("text")
+            .attr("x", 0)
+            .attr("y", 0)
+            .text("True Rate")
+            .attr("transform", "rotate(270)")
+            .attr('fill', '#969696')
+            .attr('text-anchor', 'end')
+            .attr('alignment-baseline', 'baseline')
+            .style("font-size", "8pt")
+            .style("font-weight", "500")
+            .style('font-family',"-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif'");  
+
+    }
+
     const ref = renderD3( 
         (svgref) => {
 
             // constants
             const margins = {
                 top: 40,
-                left: 40,
+                left: 50,
                 right: 40,
                 bottom: 40
             }
@@ -178,6 +216,14 @@ const ClassicCalibrationPlot = ( props ) => {
             const chartGroup = svgref
                 .append("g")
                 .attr("transform", `translate(${margins.left},${margins.top})`);
+
+            const xLegendGroup = svgref
+                .append("g")
+                .attr("transform", `translate(${svgref.node().getBoundingClientRect().width -  margins.right},${svgref.node().getBoundingClientRect().height - 10 })`);
+
+            const yAxisLegend = svgref
+                .append("g")
+                .attr("transform", `translate(${ margins.left/2 - 5 },${margins.top})`);
             
             // svg size
             const svgWidthRange = [0, svgref.node().getBoundingClientRect().width - margins.left - margins.right];
@@ -200,6 +246,14 @@ const ClassicCalibrationPlot = ( props ) => {
                 .style("color", "#a2a3a2")
                 .call(d3.axisLeft(yScale));
 
+            // render legends
+            render_legends( xLegendGroup, yAxisLegend );
+
+            if( props.selectedCurve.curveIndex !== -1 ){
+                // appending brush
+                create_brush( chartGroup, svgref, margins, xScale );
+            }
+
             // rendering support line
             render_support_line( chartGroup, xScale, yScale );
 
@@ -208,12 +262,9 @@ const ClassicCalibrationPlot = ( props ) => {
                 render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex].curvepoints, lineIndex, props.chartdata[lineIndex].filters );
             }
 
-            if( props.learnedCurve.length > 0 ){
+            if( props.learnedCurve && props.learnedCurve.length > 0 ){
                 render_learned_line( chartGroup, xScale, yScale, props.learnedCurve );
             }
-
-            // appending brush
-            // create_brush( chartGroup, svgref, margins, xScale );
             
         });
 

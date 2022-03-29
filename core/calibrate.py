@@ -57,6 +57,7 @@ class Calibrate:
             'get_reliability_curve': self.get_reliability_curve,
             'get_learned_curve': self.get_learned_curve,
             'get_curve_instance_data': self.get_curve_instance_data,
+            # 'get_preds_histogram': 
             'clear_curves': self.clear_curves,
             'filter_by_pred_range': self.filter_by_pred_range
         }
@@ -75,6 +76,9 @@ class Calibrate:
             data_dict=input_data,
             callbacks=callbacks )
 
+
+    def get_preds_histogram( self, event ):
+        pass
 
     def get_reliability_curve( self, event ):
 

@@ -7,6 +7,7 @@ import { Legend } from '../../helpers/legend';
 
 // styles
 import './Confusionmatrix.css';
+import { renderD3 } from '../../hooks/render.hook';
 
 const Confusionmatrix = ( props ) => {
 
@@ -15,10 +16,22 @@ const Confusionmatrix = ( props ) => {
         return d3.max(row)
     });
 
-
-
     // creating color scale
     const cScale = d3.scaleSequential(d3.interpolateGreys).domain([0, maxCount])
+
+    const ref = renderD3(
+        (svgref) => {
+
+            // removing previous legend
+            d3.select('.legend-svg').selectAll('*').remove();
+
+            if( props.matrixdata.length > 0){
+                Legend(d3.scaleSequential([0, maxCount],  d3.interpolateGreys), svgref, {
+                    title: "Count"
+                });
+            }
+        }
+    )
 
     return(
         <div className='confusion-matrix-container'>
@@ -35,11 +48,10 @@ const Confusionmatrix = ( props ) => {
                     </div>
                 )}
             </div>
-            <div className='confusion-matrix-footer'>
-                <p>Confusion Matrix</p>
-                {/* { Legend(d3.scaleSequential([0, 100], d3.interpolateViridis), {
-                    title: "Temperature (°F)"
-                })} */}
+            <div className='confusion-matrix-footer' >
+                <div className='confusion-matrix-footer-container'>
+                    <svg className='legend-svg' ref={ref}></svg>
+                </div>
             </div>
         </div>
     )

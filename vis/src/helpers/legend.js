@@ -3,15 +3,15 @@
 // https://observablehq.com/@d3/color-legend
 import * as d3 from 'd3';
 
-export function Legend(color, {
+export function Legend(color, svg, {
     title,
     tickSize = 6,
     width = 320, 
     height = 44 + tickSize,
     marginTop = 18,
-    marginRight = 0,
+    marginRight = 5,
     marginBottom = 16 + tickSize,
-    marginLeft = 0,
+    marginLeft = 5,
     ticks = width / 64,
     tickFormat,
     tickValues
@@ -28,13 +28,6 @@ export function Legend(color, {
       }
       return canvas;
     }
-  
-    const svg = d3.create("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("viewBox", [0, 0, width, height])
-        .style("overflow", "visible")
-        .style("display", "block");
   
     let tickAdjust = g => g.selectAll(".tick line").attr("y1", marginTop + marginBottom - height);
     let x;
@@ -131,6 +124,8 @@ export function Legend(color, {
   
     svg.append("g")
         .attr("transform", `translate(0,${height - marginBottom})`)
+        .attr('color', "#969696")
+        .attr('fill', "#969696")
         .call(d3.axisBottom(x)
           .ticks(ticks, typeof tickFormat === "string" ? tickFormat : undefined)
           .tickFormat(typeof tickFormat === "function" ? tickFormat : undefined)
@@ -141,9 +136,11 @@ export function Legend(color, {
         .call(g => g.append("text")
           .attr("x", marginLeft)
           .attr("y", marginTop + marginBottom - height - 6)
-          .attr("fill", "currentColor")
+          .attr("fill", "#969696")
           .attr("text-anchor", "start")
-          .attr("font-weight", "bold")
+          .attr("font-weight", 500 )
+          .attr("font-size", "8pt")
+          .attr('font-family', "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif")
           .attr("class", "title")
           .text(title));
   

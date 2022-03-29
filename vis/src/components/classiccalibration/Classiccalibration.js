@@ -57,11 +57,11 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
-                return divergingColorScale10(curveIndex);
-                // if(curveIndex === props.selectedCurve.curveIndex ){
-                //     return "#9ecae1"
-                // }
-                // return "#a2a3a2";
+                // return divergingColorScale10(curveIndex);
+                if(curveIndex === props.selectedCurve.curveIndex ){
+                    return "#9ecae1"
+                }
+                return "#a2a3a2";
             })
             .style("stroke-width", "2")
             .style('cursor', 'pointer')
@@ -273,17 +273,17 @@ const ClassicCalibrationPlot = ( props ) => {
             // render legends
             render_legends( xLegendGroup, yLegendGroup );
 
-            // if( props.selectedCurve.curveIndex !== -1 && props.predsHistrogram.values.length > 0 ){
+            if( props.selectedCurve.curveIndex !== -1 && props.predsHistrogram.values.length > 0 ){
 
-            //     // calculating max histogram value
-            //     const maxHistValue = d3.max(props.predsHistrogram.values);
+                // calculating max histogram value
+                const maxHistValue = d3.max(props.predsHistrogram.values);
 
-            //     const predsHistogramXscale = d3.scaleLinear().domain([0, props.predsHistrogram.values.length]).range(svgWidthRange);
-            //     const predsHistogramYscale = d3.scaleLinear().domain([0, maxHistValue]).range([80, 0]);
+                const predsHistogramXscale = d3.scaleLinear().domain([0, props.predsHistrogram.values.length]).range(svgWidthRange);
+                const predsHistogramYscale = d3.scaleLinear().domain([0, maxHistValue]).range([80, 0]);
 
                 
-            //     render_preds_histogram( predsHistogramGroup, props.predsHistrogram.values, predsHistogramXscale, predsHistogramYscale );
-            // }
+                render_preds_histogram( predsHistogramGroup, props.predsHistrogram.values, predsHistogramXscale, predsHistogramYscale );
+            }
 
             if( props.selectedCurve.curveIndex !== -1 ){
                 // appending brush

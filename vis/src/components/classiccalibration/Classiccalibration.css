@@ -5,17 +5,12 @@ svg {
     
     margin-right: "0px";
     margin-left: "0px";
-
-
 }
 
 .plot-container{
 
-    width: 330px;
-    height: 330px;
-
     display: flex;
-    /* flex: 1; */
+    flex: 1;
 
 }
 

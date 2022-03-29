@@ -6,8 +6,13 @@ import './Instanceview.css'
 
 const Instanceview = (props) => {
 
+
+
     return (
         <div className='instance-view-table-wrapper'>
+
+            {/* className={ props.classifications[rowindex] === 1  ? 'positive-instance' : 'negative-instance' } */}
+
             
             <div className='instance-view-table-scrollable'>
                 <table className="instance-table">
@@ -18,7 +23,6 @@ const Instanceview = (props) => {
                             )}
                         </tr>
                     </thead>
-                    {/* className={ props.classifications[rowindex] === 1  ? 'positive-instance' : 'negative-instance' } */}
                     <tbody>
                         {props.tablebody.map( (row, rowindex) => 
                             <tr key={rowindex} >
@@ -30,6 +34,7 @@ const Instanceview = (props) => {
                     </tbody>
                 </table>
             </div>
+            
         </div>
     )
 

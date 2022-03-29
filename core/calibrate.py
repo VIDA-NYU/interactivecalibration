@@ -92,9 +92,10 @@ class Calibrate:
 
     def get_learned_curve( self, event ):
 
-        selectedCurve = event['curveIndex']
+        selectedCurve = self.createdCurves[event['curveIndex']]
+        learnedCurve = learned_reliability_diagram( selectedCurve.preds, selectedCurve.labels )
 
-        return {'test': selectedCurve}
+        return learnedCurve
 
     def get_curve_instance_data( self, event ):
 

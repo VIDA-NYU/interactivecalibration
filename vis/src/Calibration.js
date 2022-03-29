@@ -24,6 +24,7 @@ const Calibration = ( props ) => {
 
     const [ reliabilitycharts, setReliabilitycharts ] = useState( [] );
     const [ selectedreliabilitychart, setSelectedreliabilitychart ] = useState( {'curveIndex': -1} );
+    const [ currentLearnedCurve, setCurrentLearnedCurve ] = useState( [] );
     
     
     const [ curveInstances, setCurveInstances ] = useState( {
@@ -53,6 +54,9 @@ const Calibration = ( props ) => {
             // updating state 
             setSelectedreliabilitychart( {'curveIndex': event.curveIndex} );
 
+            // clearing learned curve
+            setCurrentLearnedCurve( [] );
+
         }
 
         if( event.curveIndex !== selectedreliabilitychart.curveIndex ){
@@ -67,6 +71,9 @@ const Calibration = ( props ) => {
                 'tableheader': [],
                 'tablebody': []
             });
+
+            // clearing learned curve
+            setCurrentLearnedCurve( [] );
 
             // setting matrix data
             setMatrixdata( [] );
@@ -83,8 +90,6 @@ const Calibration = ( props ) => {
 
         const clear_all_curves = ( event ) => {
 
-            console.log('event: ', event);
-
             // clearing curves
             setReliabilitycharts( [] );
 
@@ -97,7 +102,7 @@ const Calibration = ( props ) => {
                 'featurefilters': {}
             });
 
-                // instance rows
+            // instance rows
             setCurveInstances( {
                 'tableheader': [],
                 'tablebody': []
@@ -105,6 +110,9 @@ const Calibration = ( props ) => {
 
             // setting matrix data
             setMatrixdata( [] );
+
+            // clearing learned curve
+            setCurrentLearnedCurve( [] );
 
             // updating state
             setSelectedreliabilitychart( {'curveIndex': -1 } );
@@ -148,26 +156,17 @@ const Calibration = ( props ) => {
 
 
         console.log('Learned request...');
-        // // callback
-        // const reliability_diagram = ( data ) => {
+        console.log( selectedreliabilitychart );
 
-        //     const charts = [...reliabilitycharts];
-        //     charts.push( {'curvepoints': data.reliabilitychart, filters } )
-        //     setReliabilitycharts( charts );
+        // callback
+        const learned_curve_data = ( data ) => {
 
-        //     // clearing filters
-        //     setFilters({
-        //         'nbins': 10,
-        //         'selectedclass': 0,
-        //         'currentmodel': props.models[0],
-        //         'predrange': [],
-        //         'featurefilters': {}
-        //     });
+          setCurrentLearnedCurve(data.learnedcurve);
 
-        // };
+        };
 
-        // let comm_curve_request = new CommAPI('get_reliability_curve', reliability_diagram);
-        // comm_curve_request.call(filters);
+        let comm_learned_curve_request = new CommAPI('get_learned_curve', learned_curve_data);
+        comm_learned_curve_request.call(selectedreliabilitychart);
 
     };
 
@@ -228,6 +227,7 @@ const Calibration = ( props ) => {
                         <ClassicCalibrationPlot 
                             chartdata={reliabilitycharts}
                             selectedCurve={selectedreliabilitychart}
+                            learnedCurve={currentLearnedCurve}
                             onCurveClick={on_curve_click}
                             
                             // onMouseEnterCurve={on_mouse_enter_curve}

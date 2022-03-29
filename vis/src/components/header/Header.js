@@ -110,7 +110,7 @@ const Header = ( props ) => {
     // Models
     const currentModelChanged = (event) => {
 
-        const newModel = parseInt(event.target.value);
+        const newModel = event.target.value;
         const headerConfiguration = {
             ...headerConf,
             'currentmodel': newModel
@@ -123,8 +123,6 @@ const Header = ( props ) => {
         props.headerChanged(headerConfiguration);
 
     }
-
-    
 
     return (
         <div className='header-wrapper'>

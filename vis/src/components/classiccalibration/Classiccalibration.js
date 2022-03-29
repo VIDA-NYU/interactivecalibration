@@ -52,11 +52,10 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
-                return divergingColorScale10(curveIndex);
-                // if(curveIndex === props.selectedCurve.curveIndex ){
-                //     return "#9ecae1"
-                // }
-                // return "#a2a3a2";
+                if(curveIndex === props.selectedCurve.curveIndex ){
+                    return "#9ecae1"
+                }
+                return "#a2a3a2";
             })
             .style("stroke-width", "2")
             .style('cursor', 'pointer')
@@ -101,6 +100,27 @@ const ClassicCalibrationPlot = ( props ) => {
                 d3.select(event.srcElement)
                     .style("stroke-width", "5");
             });
+
+    }
+
+    const render_learned_line = ( chartGroup, xScale, yScale, data ) => {
+
+        // creating line function
+        const line = d3.line()
+            .curve(d3.curveLinear)
+            .x(d => xScale(d.x))
+            .y(d => yScale(d.y));
+        
+        // appending circles
+        chartGroup
+            .append('path')
+            .datum(data) 
+            .attr("class", "line") 
+            .attr("d", line)
+            .attr('stroke-dasharray', '5 5')
+            .style("fill", "none")
+            .style("stroke", "red")
+            .style("stroke-width", "1");
 
     }
 
@@ -186,6 +206,10 @@ const ClassicCalibrationPlot = ( props ) => {
             // rendering reliability curves
             for(let lineIndex = 0; lineIndex < props.chartdata.length; lineIndex++){
                 render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex].curvepoints, lineIndex, props.chartdata[lineIndex].filters );
+            }
+
+            if( props.learnedCurve.length > 0 ){
+                render_learned_line( chartGroup, xScale, yScale, props.learnedCurve );
             }
 
             // appending brush

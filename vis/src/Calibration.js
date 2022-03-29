@@ -23,7 +23,7 @@ const Calibration = ( props ) => {
     });
 
     const [ reliabilitycharts, setReliabilitycharts ] = useState( [] );
-    const [ selectedreliabilitychart, setSelectedreliabilitychart ] = useState( -1 );
+    const [ selectedreliabilitychart, setSelectedreliabilitychart ] = useState( {'curveIndex': -1} );
     
     
     const [ curveInstances, setCurveInstances ] = useState( {
@@ -144,6 +144,34 @@ const Calibration = ( props ) => {
     };
 
 
+    const on_learned_curve_requested = () => {
+
+
+        console.log('Learned request...');
+        // // callback
+        // const reliability_diagram = ( data ) => {
+
+        //     const charts = [...reliabilitycharts];
+        //     charts.push( {'curvepoints': data.reliabilitychart, filters } )
+        //     setReliabilitycharts( charts );
+
+        //     // clearing filters
+        //     setFilters({
+        //         'nbins': 10,
+        //         'selectedclass': 0,
+        //         'currentmodel': props.models[0],
+        //         'predrange': [],
+        //         'featurefilters': {}
+        //     });
+
+        // };
+
+        // let comm_curve_request = new CommAPI('get_reliability_curve', reliability_diagram);
+        // comm_curve_request.call(filters);
+
+    };
+
+
     const header_changed = ( headerConf ) => {
 
         const newFilters = {
@@ -184,8 +212,10 @@ const Calibration = ( props ) => {
                     <Header 
                         models={props.models}
                         nclasses={props.nclasses}
+                        selectedCurve={selectedreliabilitychart}
                         headerChanged={header_changed}
                         onCurveRequested={on_curve_requested}
+                        onLearnedCurveRequested={on_learned_curve_requested}
                         onClearCliked={clear_all}  
                         // onClassChanged={on_class_changed} 
                         // onLearnedCurveRequested={on_learned_curve_requested} 
@@ -199,6 +229,7 @@ const Calibration = ( props ) => {
                             chartdata={reliabilitycharts}
                             selectedCurve={selectedreliabilitychart}
                             onCurveClick={on_curve_click}
+                            
                             // onMouseEnterCurve={on_mouse_enter_curve}
                             // onMouseOutCurve={on_mouse_out_curve}
                             // onMouseOutCurve={}
@@ -240,123 +271,3 @@ const Calibration = ( props ) => {
 }
 
 export default Calibration;
-
-    // setting state
-    // const [chartdata, setChartData] = useState( [] );
-
-    // const [tableHeader, setTableHeader] = useState( [] );
-    // const [tableBody, setTableBody] = useState( [] );
-    // const [classifications, setClassifications] = useState( [] );
-    // const [featureFilters, setFeatureFilters] = useState( {} );
-    // const [learnedCurve, setLearnedCurve] = useState( { 'active': false, 'curvedata': null } );
-
-
-
-    // const on_learned_curve_requested = () => {
-
-    //     const learnedCurveData = ( data ) => {
-    //         const newData = { 'active': !learnedCurve.active,  'curvedata': data.learnedcurve };
-    //         setLearnedCurve(newData);
-    //    };
-
-    //    let comm_learned_curve = new CommAPI('get_learned_curve', learnedCurveData);
-
-    //    // Send data
-    //    comm_learned_curve.call({});
-
-
-    // }
-
-    // const reliability_diagram_brushed = (brushrange) => {
-
-    //     // const mockheader = ['Age', 'Education-Num', 'Sex', 'Capital Gain', 'Capital Loss','Hours per week'];
-    //     // const mockbody = 
-    //     // [[ 3.000,  1.130,  1.000,  2.174,  0.000, 4.000],
-    //     // [ 8.400,  1.130,  1.000,  0.000,  0.000, 2.220],
-    //     // [4.000, 4.200,  1.000,  0.000,  0.000, 4.000],
-    //     // [1.060, 1.200,  1.000,  0.000,  0.000, 4.000],
-    //     // [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
-    //     // [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
-    //     // [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
-    //     // [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
-    //     // [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
-    //     // [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
-    //     // [7.800,  1.130,  0.000,  0.000,  0.000, 4.000],
-    //     // [1.200,  1.520,  0.000,  0.000,  0.000, 4.000]];
-
-    //     // const classifications = [0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1];
-
-
-    //     // setTableHeader( mockheader );
-    //     // setTableBody( mockbody );
-    //     // setClassifications( classifications );
-        
-        
-    //     const instance_table = ( data ) => {
-            
-    //         setTableHeader( data.tableheader );
-    //         setTableBody( data.tablebody );
-    //         setClassifications( data.classifications );
-
-            
-    //    };
-    //    let comm_instance_table = new CommAPI('filter_by_pred_range', instance_table);
-
-    //    // Send data
-    //    comm_instance_table.call({'params': { 'rangestart': brushrange.start, 'rangeend': brushrange.end  }  });
-
-    // }
-
-    // const feature_brushed = (featureconditions) =>   {
-
-    //     const currentFilters = {
-    //         ...featureFilters,
-    //     }
-    //     currentFilters[featureconditions['name']] = featureconditions;
-    //     setFeatureFilters(currentFilters);
-
-    //     const feature_filtered_instance_table = ( data ) => {
-            
-    //         setTableHeader( data.instancetable.tableheader );
-    //         setTableBody( data.instancetable.tablebody );
-    //         setClassifications( data.instancetable.classifications );
-
-    //         // new reliability curve
-    //         setChartData( data.reliabilitydiagram.chartdata );
-    //    };
-
-    //    let comm_feature_brushed = new CommAPI('filter_by_feature_range', feature_filtered_instance_table);
-
-    //    // Send data
-    //    comm_feature_brushed.call({'params': {'filters': currentFilters }});
-
-    // }
- 
-    // const on_class_changed = (configuration) => {
-
-    //     const reliability_diagram = ( data ) => {
-    //         const newLines = [];
-    //         for(let i = 0; i < chartdata.length; i++){
-    //             newLines.push( chartdata[i] );
-    //         }
-    //         newLines.push( data.chartdata );
-    //         setChartData( newLines );
-    //     };
-    //     let comm_configuration_changed = new CommAPI('get_reliability_diagram', reliability_diagram);
-
-    //     // Send data
-    //     comm_configuration_changed.call({'params': { nbins: parseInt(configuration.nbins), currentclass: parseInt(configuration.currentClass) }  });
-
-    // }
-
-    // const configuration_changed = (configuration) => {
-
-    //     const reliability_diagram = ( data ) => {
-    //         setChartData( [data.chartdata] );
-    //     };
-    //     let comm_configuration_changed = new CommAPI('get_reliability_diagram', reliability_diagram);
-
-    //     // Send data
-    //     comm_configuration_changed.call({'params': { nbins: parseInt(configuration.nbins), currentclass: parseInt(configuration.currentClass) }  });
-
-    // }

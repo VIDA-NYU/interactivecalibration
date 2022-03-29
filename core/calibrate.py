@@ -4,7 +4,7 @@ from notebookjs import execute_js
 from helpers import calculate_histograms
 from reliabilitycurve import ReliabilityCurve
 # from callbacks import reliability_diagram, learned_reliability_diagram, filter_by_range, filter_by_feature_range
-from callbacks import get_reliability_curve
+from callbacks import get_reliability_curve, learned_reliability_diagram
 
 
 
@@ -54,6 +54,7 @@ class Calibrate:
         ## setting callbacks
         callbacks = {
             'get_reliability_curve': self.get_reliability_curve,
+            'get_learned_curve': self.get_learned_curve,
             'get_curve_instance_data': self.get_curve_instance_data,
             'clear_curves': self.clear_curves
         }
@@ -80,15 +81,20 @@ class Calibrate:
         modelLabels = self.labels[event['currentmodel']]
         
         ## getting curve
-        currentcurvedata, instancedata, confusionmatrix = get_reliability_curve( event, data=self.data, preds=modelPredictions, labels=modelLabels )
+        currentcurvedata, instancedata, confusionmatrix, preds, labels = get_reliability_curve( event, data=self.data, preds=modelPredictions, labels=modelLabels )
         
         ## saving instance data
-        curve = ReliabilityCurve( tableheader=instancedata['tableheader'], tablebody=instancedata['tablebody'], confusionMatrix=confusionmatrix )
+        curve = ReliabilityCurve( tableheader=instancedata['tableheader'], tablebody=instancedata['tablebody'], confusionMatrix=confusionmatrix, preds=preds, labels=labels )
         self.createdCurves.append(curve)
 
         ## getting curve
         return currentcurvedata
 
+    def get_learned_curve( self, event ):
+
+        selectedCurve = event['curveIndex']
+
+        return {'test': selectedCurve}
 
     def get_curve_instance_data( self, event ):
 
@@ -107,18 +113,4 @@ class Calibrate:
         self.createdCurves = []
 
         return {'ncurves':  nCurves}
-
-
-
-    # def get_reliability_diagram(self, event):
-    #     return reliability_diagram( self.predictions, self.labels, event['params']['currentclass'], event['params']['nbins'] )
-
-    # def filter_input_data_by_pred_range(self, event):
-    #     return filter_by_range( self.predictions, self.data, self.labels, event['params']['rangestart'], event['params']['rangeend'] )
-
-    # def filter_input_data_by_feature_range(self, event):
-    #     return filter_by_feature_range( self.data, self.predictions, self.labels, event['params']['filters'] )
-
-    # def get_learned_curve( self, event ):
-    #     return learned_reliability_diagram( self.predictions, self.labels )
 

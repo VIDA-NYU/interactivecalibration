@@ -9,6 +9,10 @@
 
 }
 
+.hidden-button{
+    display: none;
+}
+
 .button-container{
 
     display: flex;

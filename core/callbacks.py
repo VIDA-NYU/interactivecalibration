@@ -37,7 +37,7 @@ def get_reliability_curve(filters, data, preds, labels):
             'tableheader': filteredData.columns.tolist(),
             'tablebody': np.around(filteredData.values, decimals=2).tolist(),
             # 'classifications': filteredLabels.tolist()
-        }, confusionMatrix
+        }, confusionMatrix, filteredPreds, filteredLabels
 
 
 def reliability_diagram( preds, labels, bins ):
@@ -63,26 +63,26 @@ def confusion( preds, labels ):
     
     return confusion_matrix(y_true, y_pred)
 
-# def learned_reliability_diagram(preds, labels, class_index=1, bins=10, random_state=0):
+def learned_reliability_diagram(preds, labels, bins=10, random_state=42):
 
-#     '''
-#         n = number of samples
-#         k = number of classes
+    '''
+        n = number of samples
+        k = number of classes
 
-#         preds - n x k numpy array of predicted probabilities
-#         labels - n x k numpy array of one-hot encoded labels
-#         class_index - integer of what class to consider
-#         bins - integer for number of bins in EBM model
-#         random_state - for reproducibility
-#     '''
+        preds - n x k numpy array of predicted probabilities
+        labels - n x k numpy array of one-hot encoded labels
+        class_index - integer of what class to consider
+        bins - integer for number of bins in EBM model
+        random_state - for reproducibility
+    '''
 
-#     ebm = ExplainableBoostingClassifier(random_state=random_state, binning="uniform", max_bins=bins)
-#     ebm.fit(preds[:,class_index], labels[:,class_index])
-#     conf = np.linspace(0,1,num=100)
-#     acc = ebm.predict_proba(conf.reshape(-1,1))[:,1]
+    ebm = ExplainableBoostingClassifier(random_state=random_state, binning="uniform", max_bins=bins)
+    ebm.fit(preds.reshape(-1,1), labels.reshape(-1,1))
+    conf = np.linspace(0,1,num=100)
+    acc = ebm.predict_proba(conf.reshape(-1,1))[:,1]
 
-#     chartData = [ { 'x': conf[i], 'y': acc[i] }  for i in range(acc.shape[0])]
-#     return {'learnedcurve': chartData }
+    chartData = [ { 'x': conf[i], 'y': acc[i] }  for i in range(acc.shape[0])]
+    return {'learnedcurve': chartData }
 
 
 # def reliability_diagram( preds, labels, class_index=1, bins=10 ):

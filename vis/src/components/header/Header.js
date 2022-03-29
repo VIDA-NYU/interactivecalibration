@@ -49,6 +49,12 @@ const Header = ( props ) => {
     }
 
     // Learned Curve Request
+    const on_learned_curve_request = () => {
+
+        // requesting new curve
+        props.onLearnedCurveRequested();
+
+    }
     // TODO: Add learned curve
 
     // Bins
@@ -172,9 +178,11 @@ const Header = ( props ) => {
 
             <div className='single-button-container-header' onClick={on_curve_request}>
                 <p>Create Curve</p>
-            </div>
+            </div>  
 
-            <div className='single-button-container-header'>
+            {/* className='single-button-container-header'  */}
+
+            <div className='single-button-container-header' style={ (props.selectedCurve.curveIndex === -1) ? { display: 'none' } : {display: 'flex'} } onClick={on_learned_curve_request}>
                 <p>Learned Curve</p>
             </div>
             

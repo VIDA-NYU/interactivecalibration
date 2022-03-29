@@ -52,12 +52,11 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
-                
-                // return divergingColorScale10(curveIndex);
-                if(curveIndex === props.selectedCurve.curveIndex ){
-                    return "#9ecae1"
-                }
-                return "#a2a3a2";
+                return divergingColorScale10(curveIndex);
+                // if(curveIndex === props.selectedCurve.curveIndex ){
+                //     return "#9ecae1"
+                // }
+                // return "#a2a3a2";
             })
             .style("stroke-width", "2")
             .style('cursor', 'pointer')
@@ -184,16 +183,10 @@ const ClassicCalibrationPlot = ( props ) => {
             // rendering support line
             render_support_line( chartGroup, xScale, yScale );
 
-            
+            // rendering reliability curves
             for(let lineIndex = 0; lineIndex < props.chartdata.length; lineIndex++){
                 render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex].curvepoints, lineIndex, props.chartdata[lineIndex].filters );
             }
-
-            
-
-            // if( props.learnedCurve.active ){
-            //     render_calibration_line( chartGroup, xScale, yScale, props.learnedCurve.curvedata );
-            // }
 
             // appending brush
             // create_brush( chartGroup, svgref, margins, xScale );

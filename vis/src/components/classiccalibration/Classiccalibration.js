@@ -57,11 +57,11 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
-                // return divergingColorScale10(curveIndex);
-                if(curveIndex === props.selectedCurve.curveIndex ){
-                    return "#9ecae1"
-                }
-                return "#a2a3a2";
+                return divergingColorScale10(curveIndex);
+                // if(curveIndex === props.selectedCurve.curveIndex ){
+                //     return "#9ecae1"
+                // }
+                // return "#a2a3a2";
             })
             .style("stroke-width", "2")
             .style('cursor', 'pointer')

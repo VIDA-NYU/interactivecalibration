@@ -50,7 +50,7 @@ class Calibrate:
         ## updating nclasses
         self.nClasses = predictions.shape[1]
         
-    def calibrate(self):
+    def visualize(self):
 
         ## setting callbacks
         callbacks = {

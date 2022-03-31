@@ -1,7 +1,7 @@
 from copyreg import constructor
 from gc import callbacks
 from notebookjs import execute_js
-from helpers import calculate_histograms
+from helpers import calculate_histograms, calculate_preds_histograms
 from reliabilitycurve import ReliabilityCurve
 import numpy as np
 # from callbacks import reliability_diagram, learned_reliability_diagram, filter_by_range, filter_by_feature_range
@@ -57,7 +57,6 @@ class Calibrate:
             'get_reliability_curve': self.get_reliability_curve,
             'get_learned_curve': self.get_learned_curve,
             'get_curve_instance_data': self.get_curve_instance_data,
-            # 'get_preds_histogram': 
             'clear_curves': self.clear_curves,
             'filter_by_pred_range': self.filter_by_pred_range
         }
@@ -77,8 +76,8 @@ class Calibrate:
             callbacks=callbacks )
 
 
-    def get_preds_histogram( self, event ):
-        pass
+    def get_preds_histogram( self, preds ):
+        return calculate_preds_histograms(preds)
 
     def get_reliability_curve( self, event ):
 
@@ -109,6 +108,7 @@ class Calibrate:
             'tableheader':  self.createdCurves[event['curveIndex']].tableheader,
             'tablebody': self.createdCurves[event['curveIndex']].tablebody,
             'confusionmatrix': self.createdCurves[event['curveIndex']].confusionMatrix,
+            'predshistogram': self.get_preds_histogram(self.createdCurves[event['curveIndex']].preds)
         }
 
         return currentInstanceData

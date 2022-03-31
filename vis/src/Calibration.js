@@ -76,8 +76,7 @@ const Calibration = ( props ) => {
             setSelectedreliabilitychart( {'curveIndex': event.curveIndex} );
 
             // updating preds histogram
-            setCurrentPredsHistogram( 
-                {'values':  Array.from({length: 20}, () => Math.floor(Math.random() * 40)) } );
+            setCurrentPredsHistogram( data.predshistogram )
 
             // clearing learned curve
             setCurrentLearnedCurve( [] );

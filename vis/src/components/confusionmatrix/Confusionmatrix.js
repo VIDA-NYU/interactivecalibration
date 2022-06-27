@@ -43,7 +43,9 @@ const Confusionmatrix = ( props ) => {
                 { props.matrixdata.map( (row, rowindex) => 
                     <div className='matrix-row'>
                         { props.matrixdata[rowindex].map( (column, columnindex) => 
-                            <div className='matrix-column' style={{backgroundColor: cScale(column)}}></div>
+                            <div className='matrix-column' style={{backgroundColor: cScale(column)}}>
+                                <p className='cell-value'>{column}</p>
+                            </div>
                         )}
                     </div>
                 )}

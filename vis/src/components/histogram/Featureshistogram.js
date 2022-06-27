@@ -12,6 +12,27 @@ import * as d3 from 'd3';
 
 const Featurehistogram = ( props ) => {
 
+    const add_selection_text = (headerGroup, headerWidth, histName, histFilters) => {
+
+        console.log('histName: ', histName);
+        console.log('filters: ', histFilters);
+
+        if( histName in histFilters ){
+
+            headerGroup
+                .append('text')
+                .attr('x', headerWidth)             
+                .attr('y', 0)
+                .attr('text-anchor', 'end')
+                .style('fill', '#969696')
+                .style('font-family', "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif")
+                .style('font-size', '12px')
+                .text('0, 10');
+
+        }
+
+    }
+
     const add_brush = ( chartGroup, svgref, margins, xScale ) => {
 
         // creating brush
@@ -122,6 +143,9 @@ const Featurehistogram = ( props ) => {
 
             // adding header
             add_header( headerGroup, props.histdata.name );
+
+            // adding selection text
+            add_selection_text( headerGroup, svgWidthRange, props.histdata.name, props.appliedFilters );
 
             // rendering chart
             render_histogram( chartGroup, xScale, yScale, props.histdata.values);

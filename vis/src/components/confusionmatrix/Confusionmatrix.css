@@ -79,3 +79,8 @@
     align-items: center;
     justify-content: center;
 }
+
+.cell-value {
+
+    color: white;
+}

@@ -39,11 +39,7 @@ const Calibration = ( props ) => {
     //********** CALIBRATION PLOT EVENTS **********/
     const on_pred_range_brushed = ( event ) => {
 
-        // console.log('on pred range: ', event);
-
         const filtered_table_data = ( data ) => {
-
-            console.log('inside: ',data);
 
              // instance rows
              setCurveInstances( {

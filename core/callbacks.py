@@ -22,6 +22,10 @@ def get_reliability_curve(filters, data, preds, labels):
         filteredLabels = filteredLabels[ currentconds ]
 
 
+    ## saving all classes predictions
+    allClassPreds = filteredPreds
+    allClassLabels = filteredLabels
+
     ## confusion matrix
     confusionMatrix = confusion(filteredPreds, filteredLabels)
 
@@ -37,7 +41,7 @@ def get_reliability_curve(filters, data, preds, labels):
             'tableheader': filteredData.columns.tolist(),
             'tablebody': np.around(filteredData.values, decimals=2).tolist(),
             # 'classifications': filteredLabels.tolist()
-        }, confusionMatrix, filteredPreds, filteredLabels
+        }, confusionMatrix, filteredPreds, filteredLabels, allClassPreds, allClassLabels
 
 
 def reliability_diagram( preds, labels, bins ):
@@ -63,7 +67,7 @@ def confusion( preds, labels ):
     
     return confusion_matrix(y_true, y_pred)
 
-def learned_reliability_diagram(preds, labels, bins=10, random_state=42):
+def learned_reliability_diagram(preds, labels, bins=256, random_state=42):
 
     '''
         n = number of samples

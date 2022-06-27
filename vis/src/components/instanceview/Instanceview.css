@@ -18,7 +18,8 @@
 .instance-view-table-footer{
 
     display: flex;
-    flex: 1;
+    flex: 2;
+    /* flex-direction: column; */
     justify-content: flex-end;
 
     /* background-color: #d6604d; */
@@ -30,12 +31,22 @@
     height: 100%;
     width: 100px;
 
+    /* background-color: blue; */
+
     display: flex;
     justify-content: space-around;
 
     margin: 0px 10px 0px 10px;
 
 }
+
+/* .summary-wrapper{
+
+    background-color: #d6604d;
+    width: 100%;
+    height: 50%;
+
+} */
 
 .pagination-button-container{
 

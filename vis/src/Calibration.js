@@ -41,11 +41,17 @@ const Calibration = ( props ) => {
 
         const filtered_table_data = ( data ) => {
 
+
+            console.log('CONFUSION MATRIX BRUSH: ', data.confusionmatrix);
+
              // instance rows
              setCurveInstances( {
                 'tableheader': data.tableheader,
                 'tablebody': data.tablebody.slice(0, 200)
             });
+
+            // setting matrix data
+            setMatrixdata(data.confusionmatrix);
 
         }
 
@@ -65,6 +71,8 @@ const Calibration = ( props ) => {
                 'tablebody': data.tablebody.slice(0, 200)
             });
 
+
+            console.log('CONFUSION MATRIX CLICK: ', data.confusionmatrix);
             // setting matrix data
             setMatrixdata(data.confusionmatrix);
 

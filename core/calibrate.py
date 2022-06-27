@@ -5,7 +5,7 @@ from helpers import calculate_histograms, calculate_preds_histograms
 from reliabilitycurve import ReliabilityCurve
 import numpy as np
 # from callbacks import reliability_diagram, learned_reliability_diagram, filter_by_range, filter_by_feature_range
-from callbacks import get_reliability_curve, learned_reliability_diagram
+from callbacks import get_reliability_curve, learned_reliability_diagram, confusion
 
 
 
@@ -75,7 +75,6 @@ class Calibrate:
             data_dict=input_data,
             callbacks=callbacks )
 
-
     def get_preds_histogram( self, preds ):
         return calculate_preds_histograms(preds)
 
@@ -86,10 +85,17 @@ class Calibrate:
         modelLabels = self.labels[event['currentmodel']]
         
         ## getting curve
-        currentcurvedata, instancedata, confusionmatrix, preds, labels = get_reliability_curve( event, data=self.data, preds=modelPredictions, labels=modelLabels )
+        currentcurvedata, instancedata, confusionmatrix, preds, labels, allClassPreds, allClassLabels = get_reliability_curve( event, data=self.data, preds=modelPredictions, labels=modelLabels )
         
         ## saving instance data
-        curve = ReliabilityCurve( tableheader=instancedata['tableheader'], tablebody=instancedata['tablebody'], confusionMatrix=confusionmatrix, preds=preds, labels=labels )
+        curve = ReliabilityCurve( 
+            tableheader=instancedata['tableheader'], 
+            tablebody=instancedata['tablebody'], 
+            confusionMatrix=confusionmatrix, 
+            preds=preds, 
+            labels=labels,
+            allClassPreds=allClassPreds,
+            allClassLabels=allClassLabels)
         self.createdCurves.append(curve)
 
         ## getting curve
@@ -113,7 +119,7 @@ class Calibrate:
 
         return currentInstanceData
 
-    def filter_by_pred_range( self, event ):
+    def filter_by_pred_range(self, event ):
 
         ## getting current curve
         currentCurve = self.createdCurves[0]
@@ -121,12 +127,17 @@ class Calibrate:
         ## setting conds
         conds = ( (currentCurve.preds >= event['start']) & (currentCurve.preds <= event['end']) )
         tablebody = np.array(currentCurve.tablebody)[conds]
+        
+        ## calculating filtered confusion matrix
+        preds = currentCurve.allClassPreds[conds]
+        labels = currentCurve.allClassLabels[conds]
+        confusionMatrix = confusion(preds, labels)
 
         return {
             'tablebody': tablebody.tolist(),
-            'tableheader': currentCurve.tableheader
+            'tableheader': currentCurve.tableheader,
+            'confusionmatrix': confusionMatrix
         }
-
 
     def clear_curves(self, event):
 

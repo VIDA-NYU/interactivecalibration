@@ -37,6 +37,7 @@ const Instanceview = (props) => {
             </div>
 
             <div className="instance-view-table-footer">
+
                 <div className="pagination-wrapper">
                     <div className="pagination-button-container">
                         <p><b>-</b></p>

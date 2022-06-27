@@ -14,10 +14,10 @@ const Featurehistogram = ( props ) => {
 
     const add_selection_text = (headerGroup, headerWidth, histName, histFilters) => {
 
-        console.log('histName: ', histName);
-        console.log('filters: ', histFilters);
-
         if( histName in histFilters ){
+
+            // formatting numbers
+
 
             headerGroup
                 .append('text')
@@ -27,7 +27,7 @@ const Featurehistogram = ( props ) => {
                 .style('fill', '#969696')
                 .style('font-family', "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif")
                 .style('font-size', '12px')
-                .text('0, 10');
+                .text(`[${ histFilters[histName].start.toString().substring(0,4) }, ${histFilters[histName].end.toString().substring(0,4)}]`);
 
         }
 

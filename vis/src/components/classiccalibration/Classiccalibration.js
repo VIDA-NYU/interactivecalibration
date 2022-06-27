@@ -41,7 +41,7 @@ const ClassicCalibrationPlot = ( props ) => {
         
     }
 
-    const render_calibration_line = ( chartGroup, xScale, yScale, data, curveIndex, appliedfilters  ) => {
+    const render_calibration_line = ( chartGroup, xScale, yScale, data, curveIndex, appliedfilters, selectedCurve  ) => {
 
         // creating line function
         const line = d3.line()
@@ -57,11 +57,21 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .style("fill", "none")
             .style("stroke", () => { 
-                // return divergingColorScale10(curveIndex);
-                if(curveIndex === props.selectedCurve.curveIndex ){
-                    return "#9ecae1"
+
+                if(selectedCurve == -1){
+                    return divergingColorScale10(curveIndex);
+                } else {
+                    if( selectedCurve == curveIndex ){
+                        return divergingColorScale10(curveIndex);
+                    } else {
+                        return '#d1d1d1';
+                    }
                 }
-                return "#a2a3a2";
+                
+                // if(curveIndex === props.selectedCurve.curveIndex ){
+                //     return "#9ecae1"
+                // }
+                // return "#a2a3a2";
             })
             .style("stroke-width", "2")
             .style('cursor', 'pointer')
@@ -109,7 +119,7 @@ const ClassicCalibrationPlot = ( props ) => {
 
     }
 
-    const render_learned_line = ( chartGroup, xScale, yScale, data ) => {
+    const render_learned_line = ( chartGroup, xScale, yScale, data, selectedCurve ) => {
 
         // creating line function
         const line = d3.line()
@@ -125,7 +135,9 @@ const ClassicCalibrationPlot = ( props ) => {
             .attr("d", line)
             .attr('stroke-dasharray', '5 5')
             .style("fill", "none")
-            .style("stroke", "red")
+            .style("stroke", () => {
+                return divergingColorScale10(selectedCurve);
+            })
             .style("stroke-width", "1");
 
     }
@@ -295,11 +307,11 @@ const ClassicCalibrationPlot = ( props ) => {
 
             // rendering reliability curves
             for(let lineIndex = 0; lineIndex < props.chartdata.length; lineIndex++){
-                render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex].curvepoints, lineIndex, props.chartdata[lineIndex].filters );
+                render_calibration_line( chartGroup, xScale, yScale, props.chartdata[lineIndex].curvepoints, lineIndex, props.chartdata[lineIndex].filters, props.selectedCurve.curveIndex  );
             }
 
             if( props.learnedCurve && props.learnedCurve.length > 0 ){
-                render_learned_line( chartGroup, xScale, yScale, props.learnedCurve );
+                render_learned_line( chartGroup, xScale, yScale, props.learnedCurve, props.selectedCurve.curveIndex );
             }
 
     });

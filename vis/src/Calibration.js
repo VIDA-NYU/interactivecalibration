@@ -180,7 +180,10 @@ const Calibration = ( props ) => {
         // callback
         const learned_curve_data = ( data ) => {
 
-          setCurrentLearnedCurve(data.learnedcurve);
+            console.log('Data learned curve: ', data);
+            console.log('selected chart: ', selectedreliabilitychart);
+
+            setCurrentLearnedCurve(data.learnedcurve);
 
         };
 

@@ -4,7 +4,12 @@ from interpret.glassbox import ExplainableBoostingClassifier
 import numpy as np
 import pandas as pd
 
-def get_reliability_curve(filters, data, preds, labels):
+
+def get_table_average( tablebody  ):
+
+    return  np.around( np.array(tablebody).mean(axis=0) , decimals=2).tolist()
+
+def get_reliability_curve( filters, data, preds, labels ):
 
     filteredPreds = preds
     filteredLabels = labels

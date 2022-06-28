@@ -5,7 +5,7 @@ from helpers import calculate_histograms, calculate_preds_histograms
 from reliabilitycurve import ReliabilityCurve
 import numpy as np
 # from callbacks import reliability_diagram, learned_reliability_diagram, filter_by_range, filter_by_feature_range
-from callbacks import get_reliability_curve, learned_reliability_diagram, confusion
+from callbacks import get_reliability_curve, learned_reliability_diagram, confusion, get_table_average
 
 
 
@@ -34,7 +34,6 @@ class Calibrate:
         self.vislib = None
         with open ('../vis/dist/calibration.js', "r") as f:
             self.vislib = f.read()
-
 
     def add_model(self, predictions, labels, name):
 
@@ -113,6 +112,7 @@ class Calibrate:
         currentInstanceData = {
             'tableheader':  self.createdCurves[event['curveIndex']].tableheader,
             'tablebody': self.createdCurves[event['curveIndex']].tablebody,
+            'tableaverages': get_table_average(self.createdCurves[event['curveIndex']].tablebody),
             'confusionmatrix': self.createdCurves[event['curveIndex']].confusionMatrix,
             'predshistogram': self.get_preds_histogram(self.createdCurves[event['curveIndex']].preds)
         }
@@ -136,6 +136,7 @@ class Calibrate:
         return {
             'tablebody': tablebody.tolist(),
             'tableheader': currentCurve.tableheader,
+            'tableaverages': get_table_average( tablebody ),
             'confusionmatrix': confusionMatrix
         }
 

@@ -30,7 +30,8 @@ const Calibration = ( props ) => {
     
     const [ curveInstances, setCurveInstances ] = useState( {
         'tableheader': [],
-        'tablebody': []
+        'tablebody': [],
+        'tableaverages': []
     });
 
     const [matrixdata, setMatrixdata ] = useState([]);
@@ -41,13 +42,11 @@ const Calibration = ( props ) => {
 
         const filtered_table_data = ( data ) => {
 
-
-            console.log('CONFUSION MATRIX BRUSH: ', data.confusionmatrix);
-
              // instance rows
              setCurveInstances( {
                 'tableheader': data.tableheader,
-                'tablebody': data.tablebody.slice(0, 200)
+                'tablebody': data.tablebody.slice(0, 200),
+                'tableaverages': data.tableaverages
             });
 
             // setting matrix data
@@ -68,11 +67,10 @@ const Calibration = ( props ) => {
             // instance rows
             setCurveInstances( {
                 'tableheader': data.tableheader,
-                'tablebody': data.tablebody.slice(0, 200)
+                'tablebody': data.tablebody.slice(0, 200),
+                'tableaverages': data.tableaverages
             });
 
-
-            console.log('CONFUSION MATRIX CLICK: ', data.confusionmatrix);
             // setting matrix data
             setMatrixdata(data.confusionmatrix);
 
@@ -97,7 +95,8 @@ const Calibration = ( props ) => {
             // instance rows
             setCurveInstances( {
                 'tableheader': [],
-                'tablebody': []
+                'tablebody': [],
+                'tableaverages': []
             });
 
             // clearing learned curve
@@ -136,7 +135,8 @@ const Calibration = ( props ) => {
             // instance rows
             setCurveInstances( {
                 'tableheader': [],
-                'tablebody': []
+                'tablebody': [],
+                'tableaverages': []
             });
 
             // setting matrix data
@@ -187,9 +187,6 @@ const Calibration = ( props ) => {
 
         // callback
         const learned_curve_data = ( data ) => {
-
-            console.log('Data learned curve: ', data);
-            console.log('selected chart: ', selectedreliabilitychart);
 
             setCurrentLearnedCurve(data.learnedcurve);
 
@@ -281,6 +278,7 @@ const Calibration = ( props ) => {
                         <Instanceview 
                             tableheader={curveInstances.tableheader}
                             tablebody={curveInstances.tablebody}
+                            tableaverages={curveInstances.tableaverages}
                             // classifications={classifications} 
                         />
                     </div>

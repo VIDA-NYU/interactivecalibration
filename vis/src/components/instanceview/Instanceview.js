@@ -38,7 +38,21 @@ const Instanceview = (props) => {
 
             <div className="instance-view-table-footer">
 
-                <div className="pagination-wrapper">
+                <div className="summary-wrapper">
+                    <table className="average-table">
+                        <tbody>
+                            <tr>
+                                {props.tableaverages.map( (average, index) => 
+                                    <td key={index} >
+                                        <b>{average}</b>
+                                    </td>
+                                )}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {/* <div className="pagination-wrapper">
                     <div className="pagination-button-container">
                         <p><b>-</b></p>
                     </div>
@@ -48,7 +62,7 @@ const Instanceview = (props) => {
                     <div className="pagination-button-container">
                         <p><b>+</b></p>
                     </div>
-                </div>
+                </div> */}
             </div>
             
 

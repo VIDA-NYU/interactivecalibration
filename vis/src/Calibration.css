@@ -18,12 +18,16 @@
 
     display: flex;
     flex: 6;
+    justify-content: space-between;
 }
 
 .calibration-container{
 
-    display: flex;
-    flex: 6;    
+    /* display: flex; */
+
+    width: 400px;
+    height: 400px;
+    /* flex: 6;     */
     margin: 0px 10px 0 10px;
 
     border-style: solid;
@@ -36,8 +40,12 @@
 
 .histograms-wrapper{
 
-    display: flex;
-    flex: 2;
+    /* display: flex; */
+    /* flex: 2; */
+
+    width: 196px;
+    height: 100%;
+
     align-items: center;
 
     position: relative;

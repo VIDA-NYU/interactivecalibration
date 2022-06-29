@@ -1,7 +1,7 @@
 import numpy as np
 
 def calculate_preds_histograms( preds ):
-    currentHistogram = np.histogram(preds, bins=20)
+    currentHistogram = np.histogram(preds, range=(0,1), bins=20)
     histvalues = currentHistogram[0].tolist()
     histbounds = currentHistogram[1].tolist()
     currentFeature = { 'values': histvalues, 'bounds': histbounds }

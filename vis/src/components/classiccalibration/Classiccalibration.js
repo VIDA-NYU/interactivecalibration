@@ -236,6 +236,8 @@ const ClassicCalibrationPlot = ( props ) => {
             // clearing
             clear_plot(svgref);
 
+            console.log('HEIGHT: ', svgref.node().getBoundingClientRect().height);
+
             // creating groups
             const yAxisGroup = svgref
                 .append("g")
